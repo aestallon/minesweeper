@@ -4,7 +4,7 @@ Simple Minesweeper in Java
 ### CellButton.java (GUI)
 
 A **CellButton** az Aknakereső egyes celláinak nyomógombját írja le: hogy nézzen ki és milyen értékeket tároljon:
-isSus: true, ha a felhasználó gyanítja, hogy aknát rejt
+- isSus: true, ha a felhasználó gyanítja, hogy aknát rejt
 - isUncovered: true, ha a felhasználó már felfedte az értékét (azaz rákattintott bal    egérgombbal);
 - isMine: true, ha a aknát rejt;
 - value: String-ként tárolja a a gomb 'alatt' lévő értéket (0, 1, ... 8, vagy "x" akna esetén);
