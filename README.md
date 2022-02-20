@@ -50,7 +50,7 @@ Ez az osztály létrehozza a program GUI-ját. A felső gombokat (új játék m�
 Először azt ellenőrzi le, hogy megvan-e minden képfájl, ami a cellák megrajzolásához szükségesek. Ha ez
 sikeresen lezajlott, egy játékablak konstrukciója történik.
 
-#### Screenshot folder
+### Screenshot folder
 
 Itt képernyőképeket találhatóak arról, hogy nálam hogy működik a program.
 
@@ -106,6 +106,6 @@ used for submitting a solution, and the panel in which the game takes place.
 First the presence of the images necessary for decorating the minesweeper are checked, then
 a new game window is constructed.
 
-#### Screenshot folder
+### Screenshot folder
 
 Contains example images showcasing the program.
