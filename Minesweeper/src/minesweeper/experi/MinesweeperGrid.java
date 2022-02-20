@@ -38,7 +38,8 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
                 cellButton.addMouseListener(this);
                 System.out.print(minefield.cells[i][j] + "\t");   //ParasztDEBUG
             }
-            System.out.println();                                   //ParasztDEBUG
+            System.out.println();
+            System.out.println();                               //ParasztDEBUG
         }
         this.setVisible(true);
     }

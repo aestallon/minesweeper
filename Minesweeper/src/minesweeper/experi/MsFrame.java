@@ -60,7 +60,9 @@ public class MsFrame extends JFrame implements ActionListener{
         this.add(newGameLargeButton);
         this.add(msGrid);
         this.add(submitButton);
+        this.setResizable(false);
         this.setTitle("Home-Cooked Minesweeper");
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
 
     }
