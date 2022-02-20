@@ -52,11 +52,11 @@ sikeresen lezajlott, egy játékablak konstrukciója történik.
 
 ### Screenshot folder
 
-Itt képernyőképeket találhatóak arról, hogy nálam hogy működik a program.
+Itt képernyőképek találhatóak arról, hogy nálam hogy működik a program.
 
 ## EN
 ### Setup
-1) Download the files `Minesweeper.jar`, `MANIFEST.MF` and the directory `graphics` into your directory of your
+1) Download the files `Minesweeper.jar`, `MANIFEST.MF` and the directory `graphics` into the directory of your
 choice.
 2) Open a Command Prompt and navigate to your download directory.
 3) The program may be started with the command `java -jar Minesweeper.jar`.
