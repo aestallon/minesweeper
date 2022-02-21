@@ -2,7 +2,7 @@ package minesweeper.experi;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Minefield {
+public class  Minefield {
 
     public static final String MINE = "x";
     public static final String NOT_MINE = " ";

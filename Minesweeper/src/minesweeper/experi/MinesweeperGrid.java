@@ -45,18 +45,14 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
     }
 
     @Override
-    public void mouseClicked(MouseEvent event) {
-
-    }
-
-    @Override
     public void mousePressed(MouseEvent event) {
         CellButton button = (CellButton)event.getSource();
-        button.setText(button.value);
-//       Mouse pressedMouseButton = event.getButton();
         if (SwingUtilities.isLeftMouseButton(event) && !button.isSus && !button.isUncovered) {
             switch (button.value) {
-                case "0" -> button.setCellButtonImage("0");
+                case "0" -> {
+                    button.setCellButtonImage("0");
+                    autoUncoverZero(button);
+                }
                 case "1" -> button.setCellButtonImage("1");
                 case "2" -> button.setCellButtonImage("2");
                 case "3" -> button.setCellButtonImage("3");
@@ -84,6 +80,47 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
                 button.setCellButtonImage("defaultImage");
             }
         }
+    }
+
+    private CellButton getCellButton(int x, int y) {
+        for (CellButton b : cellButtons) {
+            if (b.xPosition == x && b.yPosition == y) {
+                return b;
+            }
+        }
+        return null;
+    }
+
+    private ArrayList<CellButton> getNeighbours(CellButton button) {
+        int x = button.xPosition;
+        int y = button.yPosition;
+        ArrayList<CellButton> neighbouringButtons = new ArrayList<>();
+        if (x > 0 && y > 0) neighbouringButtons.add(getCellButton(x - 1, y - 1));
+        if (x > 0) neighbouringButtons.add(getCellButton(x - 1, y));
+        if (x > 0 && y < size - 1) neighbouringButtons.add(getCellButton(x - 1, y + 1));
+        if (y < size - 1) neighbouringButtons.add(getCellButton(x, y + 1));
+        if (x < size - 1 && y < size - 1) neighbouringButtons.add(getCellButton(x + 1, y + 1));
+        if (x < size - 1) neighbouringButtons.add(getCellButton(x + 1, y));
+        if (x < size - 1 && y > 0) neighbouringButtons.add(getCellButton(x + 1, y - 1));
+        if (y > 0) neighbouringButtons.add(getCellButton(x, y - 1));
+
+        return neighbouringButtons;
+    }
+
+    private void autoUncoverZero(CellButton button) {
+        ArrayList<CellButton> buttonNeighbours = getNeighbours(button);
+        for (CellButton b : buttonNeighbours) {
+            if (!b.isUncovered) {
+                b.setCellButtonImage(b.value);
+                button.setUncovered(true);
+                if (b.value.equals("0")) autoUncoverZero(b);
+            }
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent event) {
+
     }
 
     @Override
