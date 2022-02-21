@@ -46,7 +46,7 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
 
     @Override
     public void mousePressed(MouseEvent event) {
-        CellButton button = (CellButton)event.getSource();
+        CellButton button = (CellButton) event.getSource();
         if (SwingUtilities.isLeftMouseButton(event) && !button.isSus && !button.isUncovered) {
             switch (button.value) {
                 case "0" -> {
@@ -65,17 +65,16 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
             }
             button.setUncovered(true);
             if (button.isMine) {
-               for (CellButton cb : cellButtons) {
-                   cb.setUncovered(true);
-               }
+                for (CellButton cb : cellButtons) {
+                    cb.setUncovered(true);
+                }
                 JOptionPane.showMessageDialog(null, "Sajnos vesztettél :(");
             }
         } else if (SwingUtilities.isRightMouseButton(event) && !button.isUncovered) {
             if (!button.isSus) {
                 button.setSus(true);
                 button.setCellButtonImage("suspected");
-            }
-            else {
+            } else {
                 button.setSus(false);
                 button.setCellButtonImage("defaultImage");
             }
@@ -83,9 +82,9 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
     }
 
     private CellButton getCellButton(int x, int y) {
-        for (CellButton b : cellButtons) {
-            if (b.xPosition == x && b.yPosition == y) {
-                return b;
+        for (CellButton cb : cellButtons) {
+            if (cb.xPosition == x && cb.yPosition == y) {
+                return cb;
             }
         }
         return null;
@@ -109,11 +108,11 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
 
     private void autoUncoverZero(CellButton button) {
         ArrayList<CellButton> buttonNeighbours = getNeighbours(button);
-        for (CellButton b : buttonNeighbours) {
-            if (!b.isUncovered) {
-                b.setCellButtonImage(b.value);
-                button.setUncovered(true);
-                if (b.value.equals("0")) autoUncoverZero(b);
+        for (CellButton cb : buttonNeighbours) {
+            if (!cb.isUncovered) {
+                cb.setCellButtonImage(cb.value);
+                cb.setUncovered(true);
+                if (cb.value.equals("0")) autoUncoverZero(cb);
             }
         }
     }

@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MsFrame extends JFrame implements ActionListener{
+public class MsFrame extends JFrame implements ActionListener {
     static final int SMALL = 8;
     static final int MEDIUM = 10;
     static final int LARGE = 16;
@@ -29,30 +29,30 @@ public class MsFrame extends JFrame implements ActionListener{
 
         newGameSmallButton = new JButton("Small");
         newGameSmallButton.setSize(80, 40);
-        newGameSmallButton.setLocation(0,0);
+        newGameSmallButton.setLocation(0, 0);
         newGameSmallButton.setBackground(new Color(255, 230, 138));
         newGameSmallButton.addActionListener(this);
 
         newGameMediumButton = new JButton("Medium");
         newGameMediumButton.setSize(80, 40);
-        newGameMediumButton.setLocation(80,0);
+        newGameMediumButton.setLocation(80, 0);
         newGameMediumButton.setBackground(new Color(255, 208, 138));
         newGameMediumButton.addActionListener(this);
 
         newGameLargeButton = new JButton("Large");
         newGameLargeButton.setSize(80, 40);
-        newGameLargeButton.setLocation(160,0);
+        newGameLargeButton.setLocation(160, 0);
         newGameLargeButton.setBackground(new Color(255, 183, 138));
         newGameLargeButton.addActionListener(this);
 
         submitButton = new JButton("Submit");
         submitButton.setSize(80, 40);
-        submitButton.setLocation(240,0);
+        submitButton.setLocation(240, 0);
         submitButton.setBackground(Color.GREEN);
         submitButton.addActionListener(this);
 
         msGrid = new MinesweeperGrid(10, 10);
-        msGrid.setSize(400,400);
+        msGrid.setSize(400, 400);
         msGrid.setLocation(0, 41);
 
         this.add(newGameSmallButton);
@@ -95,7 +95,7 @@ public class MsFrame extends JFrame implements ActionListener{
             cb.setIcon(null);
         }
         msGrid = new MinesweeperGrid(gameSize, mineCount);
-        msGrid.setSize(gameSize*CELL_SIZE,gameSize*CELL_SIZE);
+        msGrid.setSize(gameSize * CELL_SIZE, gameSize * CELL_SIZE);
         msGrid.setLocation(0, 41);
         this.add(msGrid);
         if (gameSize == SMALL)
@@ -109,8 +109,8 @@ public class MsFrame extends JFrame implements ActionListener{
                 denek.Ha valakinek van jobb módszere (azon kívül, hogy írni
                 kéne egy teljesen custom `look&feel`-t, szóljon.
              */
-        this.setSize(gameSize*CELL_SIZE + 16,gameSize*CELL_SIZE + 80);
-        this.setSize(gameSize*CELL_SIZE + 15,gameSize*CELL_SIZE + 80);
+        this.setSize(gameSize * CELL_SIZE + 16, gameSize * CELL_SIZE + 80);
+        this.setSize(gameSize * CELL_SIZE + 15, gameSize * CELL_SIZE + 80);
 //            SwingUtilities.updateComponentTreeUI(this);
     }
 }

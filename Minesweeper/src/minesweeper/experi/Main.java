@@ -21,8 +21,8 @@ public class Main {
     private static void CheckIfGraphicsSpritesExist() throws Exception {
         for (String filename : graphicsFiles) {
             File file = new File(userDir + fs + "graphics" + fs + filename + ".png");
-            if (!file.exists()) throw new Exception( "One or more sprites cannot be found. " +
-                                                    "Please check the integrity of the `graphics` folder.");
+            if (!file.exists()) throw new Exception("One or more sprites cannot be found. " +
+                    "Please check the integrity of the `graphics` folder.");
         }
     }
 

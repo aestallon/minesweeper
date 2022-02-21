@@ -2,7 +2,7 @@ package minesweeper.experi;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class  Minefield {
+public class Minefield {
 
     public static final String MINE = "x";
     public static final String NOT_MINE = " ";
@@ -30,7 +30,7 @@ public class  Minefield {
             else i--;
         }
     }
-    
+
     private static String[][] convertBooleanArrayToStringArray(boolean[][] booleanArray) {
         String[][] stringArray = new String[booleanArray.length][booleanArray.length];
         for (int i = 0; i < booleanArray.length; i++) {
@@ -59,17 +59,17 @@ public class  Minefield {
 
                 // Check diagonally neighbouring cells.
                 // Top-left neighbour
-                if (i != 0 && j != 0 && minefieldWithMines[i-1][j-1].equals(MINE))
+                if (i != 0 && j != 0 && minefieldWithMines[i - 1][j - 1].equals(MINE))
                     neighbourMineCounter++;
                 // Top-right neighbour
-                if (i != (minefieldWithMines.length - 1) && j != 0 && minefieldWithMines[i+1][j-1].equals(MINE))
+                if (i != (minefieldWithMines.length - 1) && j != 0 && minefieldWithMines[i + 1][j - 1].equals(MINE))
                     neighbourMineCounter++;
                 // Bottom-left neighbour
-                if (i != 0 && j != (minefieldWithMines.length - 1) && minefieldWithMines[i-1][j+1].equals(MINE))
+                if (i != 0 && j != (minefieldWithMines.length - 1) && minefieldWithMines[i - 1][j + 1].equals(MINE))
                     neighbourMineCounter++;
                 // Bottom-right neighbour
                 if (i != (minefieldWithMines.length - 1) && j != (minefieldWithMines.length - 1) &&
-                        minefieldWithMines[i+1][j+1].equals(MINE))
+                        minefieldWithMines[i + 1][j + 1].equals(MINE))
                     neighbourMineCounter++;
 
                 if (!minefieldWithMines[i][j].equals(MINE))
