@@ -63,6 +63,13 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
         }
     }
 
+    /**
+     * Returns a <code>cellButton</code> from this instance's <code>cellbuttons</code> array-list.
+     *
+     * @param x horizontal position of the cellButton
+     * @param y vertical position of the cellButton
+     * @return a cellButton, if it can be found based on the above parameters, else <code>null</code>.
+     */
     private CellButton getCellButton(int x, int y) {
         for (CellButton cb : cellButtons) {
             if (cb.getxPosition() == x && cb.getyPosition() == y) {
@@ -72,6 +79,15 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
         return null;
     }
 
+    /**
+     * Provides every cellButton neighbouring the one provided as parameter.
+     *
+     * <p>The search is performed on the <code>cellButtons</code> array-list of this instance.</p>
+     *
+     * @param button the cellButton in question.
+     * @return an ArrayList containing all buttons neighbouring the above cellButton.
+     * <i>Diagonal neighbours included.</i>
+     */
     private ArrayList<CellButton> getNeighbours(CellButton button) {
         int x = button.getxPosition();
         int y = button.getyPosition();
@@ -88,6 +104,16 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
         return neighbouringButtons;
     }
 
+    /**
+     * Uncovers all cellButtons neighbouring the button provided as parameter. If any of these newly uncovered
+     * buttons have a value of "0", the method is recursively called on them.
+     *
+     * <p>This method can be used to automatically uncover chunks of "0" valued cellButtons of the instance,
+     * and the neighbouring trivial safe cells as well. Non-trivial cells won't be uncovered.</p>
+     *
+     * @param button the cellButton where the uncovering should start. <strong>It should be called only on
+     *               buttons with value <code>"0"</code>!</strong>
+     */
     private void autoUncoverZero(CellButton button) {
         ArrayList<CellButton> buttonNeighbours = getNeighbours(button);
         for (CellButton cb : buttonNeighbours) {
@@ -97,6 +123,17 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
                 if (cb.getValue().equals("0")) autoUncoverZero(cb);
             }
         }
+    }
+
+    public int getMineCount() {
+        return mineCount;
+    }
+
+    /**
+     * @return the <code>cellButtons</code> ArrayList attribute of this instance.
+     */
+    public List<CellButton> getCellButtons() {
+        return cellButtons;
     }
 
     @Override
@@ -127,13 +164,5 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
     @Override
     public void mouseMoved(MouseEvent e) {
 
-    }
-
-    public int getMineCount() {
-        return mineCount;
-    }
-
-    public List<CellButton> getCellButtons() {
-        return cellButtons;
     }
 }

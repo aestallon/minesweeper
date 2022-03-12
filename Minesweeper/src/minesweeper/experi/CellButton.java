@@ -14,9 +14,22 @@ public class CellButton extends JButton {
     private boolean isSus = false;
     private boolean isUncovered = false;
     private boolean isMine;
+
+    /**
+     * The string value of a minefield's cell corresponding to this button.
+     */
     private String value;
 
-
+    /**
+     * An extended JButton serving as an interactable cell for a minefield. It should be placed inside a
+     * <code>minesweeperGrid</code>. The parameters denote the position of the cellButton in its container's grid
+     * layout.<p></p>
+     * Every instance of this class should be put into a collection, and the parent container should
+     * control their/its interaction by implementing the <code>MouseInputListener</code> interface.
+     *
+     * @param xPosition Horizontal position in the grid.
+     * @param yPosition Vertical position in the grid.
+     */
     public CellButton(int xPosition, int yPosition) {
         this.xPosition = xPosition;
         this.yPosition = yPosition;
@@ -46,6 +59,13 @@ public class CellButton extends JButton {
         this.isUncovered = input;
     }
 
+    /**
+     * Sets the specified image file as the button's icon.
+     *
+     * @param filename the name of the image file. It must be one of the files found in the <code>graphics</code>
+     *                 folder of the installation directory. The file extension <code>.png</code> is automatically
+     *                 appended.
+     */
     public void setCellButtonImage(String filename) {
         ImageIcon image = new ImageIcon(userDir + fs + "graphics" + fs + filename + ".png");
         this.setIcon(image);
@@ -56,17 +76,10 @@ public class CellButton extends JButton {
         return xPosition;
     }
 
-    public void setxPosition(int xPosition) {
-        this.xPosition = xPosition;
-    }
-
     public int getyPosition() {
         return yPosition;
     }
 
-    public void setyPosition(int yPosition) {
-        this.yPosition = yPosition;
-    }
 
     public boolean isSus() {
         return isSus;
