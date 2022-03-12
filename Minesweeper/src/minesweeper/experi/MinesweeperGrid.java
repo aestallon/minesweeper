@@ -48,20 +48,12 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
     public void mousePressed(MouseEvent event) {
         CellButton button = (CellButton) event.getSource();
         if (SwingUtilities.isLeftMouseButton(event) && !button.isSus && !button.isUncovered) {
-            switch (button.value) {
-                case "0" -> {
-                    button.setCellButtonImage("0");
-                    autoUncoverZero(button);
-                }
-                case "1" -> button.setCellButtonImage("1");
-                case "2" -> button.setCellButtonImage("2");
-                case "3" -> button.setCellButtonImage("3");
-                case "4" -> button.setCellButtonImage("4");
-                case "5" -> button.setCellButtonImage("5");
-                case "6" -> button.setCellButtonImage("6");
-                case "7" -> button.setCellButtonImage("7");
-                case "8" -> button.setCellButtonImage("8");
-                default -> button.setCellButtonImage("x");
+            if (button.value.equals("0")) {
+                button.setCellButtonImage("0");
+                autoUncoverZero(button);
+            }
+            else {
+                button.setCellButtonImage(button.value);
             }
             button.setUncovered(true);
             if (button.isMine) {
