@@ -1,5 +1,6 @@
 package minesweeper.experi;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Minefield {
@@ -7,7 +8,7 @@ public class Minefield {
     public static final String MINE = "x";
     public static final String NOT_MINE = " ";
 
-    String[][] cells;
+    private String[][] cells;
 
     public Minefield(int fieldSize, int mineCount) {
         cells = createMinefield(fieldSize, mineCount);
@@ -77,5 +78,20 @@ public class Minefield {
 
             }
         }
+    }
+
+    public String getCell(int x, int y) {
+        if (x < 0 || y < 0 || x >= this.cells.length || y >= this.cells[0].length) {
+            return "";
+        } else {
+            return this.cells[x][y];
+        }
+    }
+
+    public void print() {
+        for (int i = 0; i < cells.length; i++) {
+            System.out.println(Arrays.toString(cells[i]));
+        }
+
     }
 }

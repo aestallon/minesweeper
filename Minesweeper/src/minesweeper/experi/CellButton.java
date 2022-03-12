@@ -9,17 +9,18 @@ import static minesweeper.experi.Main.userDir;
 import static minesweeper.experi.MsFrame.CELL_SIZE;
 
 public class CellButton extends JButton {
-    int xPosition;
-    int yPosition;
-    boolean isSus;
-    boolean isUncovered;
-    boolean isMine;
-    String value;
+    private int xPosition;
+    private int yPosition;
+    private boolean isSus = false;
+    private boolean isUncovered = false;
+    private boolean isMine;
+    private String value;
 
 
-    public CellButton(int horizontalPosition, int verticalPosition) {
-        xPosition = horizontalPosition;
-        yPosition = verticalPosition;
+    public CellButton(int xPosition, int yPosition) {
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+
         this.setBorderPainted(false);
         this.setBorder(null);
         this.setIconTextGap(0);
@@ -28,6 +29,7 @@ public class CellButton extends JButton {
         this.setFocusable(false);
         this.setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE));
         this.setHorizontalAlignment(SwingConstants.LEFT);
+        this.setCellButtonImage("defaultImage");
 
 
     }
@@ -50,4 +52,39 @@ public class CellButton extends JButton {
         this.setHorizontalAlignment(SwingConstants.LEFT);
     }
 
+    public int getxPosition() {
+        return xPosition;
+    }
+
+    public void setxPosition(int xPosition) {
+        this.xPosition = xPosition;
+    }
+
+    public int getyPosition() {
+        return yPosition;
+    }
+
+    public void setyPosition(int yPosition) {
+        this.yPosition = yPosition;
+    }
+
+    public boolean isSus() {
+        return isSus;
+    }
+
+    public boolean isUncovered() {
+        return isUncovered;
+    }
+
+    public boolean isMine() {
+        return isMine;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

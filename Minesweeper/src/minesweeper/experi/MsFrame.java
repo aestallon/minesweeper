@@ -6,21 +6,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MsFrame extends JFrame implements ActionListener {
-    static final int SMALL = 8;
-    static final int MEDIUM = 10;
-    static final int LARGE = 16;
-
-    static final int SMALL_MINE_COUNT = 5;
-    static final int MEDIUM_MINE_COUNT = 10;
-    static final int LARGE_MINE_COUNT = 55;
-
     public static final int CELL_SIZE = 40;
 
-    MinesweeperGrid msGrid;
-    JButton submitButton;
-    JButton newGameSmallButton;
-    JButton newGameMediumButton;
-    JButton newGameLargeButton;
+    private static final int SMALL = 8;
+    private static final int MEDIUM = 10;
+    private static final int LARGE = 16;
+
+    private static final int SMALL_MINE_COUNT = 5;
+    private static final int MEDIUM_MINE_COUNT = 10;
+    private static final int LARGE_MINE_COUNT = 55;
+
+    private MinesweeperGrid msGrid;
+    private JButton submitButton;
+    private JButton newGameSmallButton;
+    private JButton newGameMediumButton;
+    private JButton newGameLargeButton;
 
     public MsFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,11 +77,11 @@ public class MsFrame extends JFrame implements ActionListener {
             createNewGame(LARGE, LARGE_MINE_COUNT);
         } else if (e.getSource() == submitButton) {
             int foundMineCounter = 0;
-            for (CellButton cb : msGrid.cellButtons) {
-                if (cb.isSus && cb.isMine) foundMineCounter++;
+            for (CellButton cb : msGrid.getCellButtons()) {
+                if (cb.isSus() && cb.isMine()) foundMineCounter++;
             }
-            if (foundMineCounter == msGrid.mineCount) {
-                for (CellButton cb : msGrid.cellButtons) {
+            if (foundMineCounter == msGrid.getMineCount()) {
+                for (CellButton cb : msGrid.getCellButtons()) {
                     cb.setUncovered(true);
                 }
                 JOptionPane.showMessageDialog(null, "Gratulálunk nyertél!!!!");
@@ -91,7 +91,7 @@ public class MsFrame extends JFrame implements ActionListener {
 
     private void createNewGame(int gameSize, int mineCount) {
         this.remove(msGrid);
-        for (CellButton cb : msGrid.cellButtons) {
+        for (CellButton cb : msGrid.getCellButtons()) {
             cb.setIcon(null);
         }
         msGrid = new MinesweeperGrid(gameSize, mineCount);
