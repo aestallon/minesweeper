@@ -3,8 +3,8 @@ package minesweeper.experi;
 import java.io.File;
 
 public class Main {
-    static final String fs = System.getProperty("file.separator");
-    static final String userDir = System.getProperty("user.dir");
+    static final String FS = System.getProperty("file.separator");
+    static final String USER_DIR = System.getProperty("user.dir");
 
     private static final String[] GRAPHICS_FILES =
             {"0", "1", "2", "3", "4", "5", "6", "7", "8", "x", "defaultImage", "suspected"};
@@ -25,7 +25,7 @@ public class Main {
      */
     private static void CheckIfGraphicsSpritesExist() throws Exception {
         for (String filename : GRAPHICS_FILES) {
-            File file = new File(userDir + fs + "graphics" + fs + filename + ".png");
+            File file = new File(USER_DIR + FS + "graphics" + FS + filename + ".png");
             if (!file.exists()) throw new Exception("One or more sprites cannot be found. " +
                     "Please check the integrity of the `graphics` folder.");
         }

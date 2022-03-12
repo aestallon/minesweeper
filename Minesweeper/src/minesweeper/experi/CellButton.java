@@ -4,8 +4,8 @@ package minesweeper.experi;
 import javax.swing.*;
 import java.awt.*;
 
-import static minesweeper.experi.Main.fs;
-import static minesweeper.experi.Main.userDir;
+import static minesweeper.experi.Main.FS;
+import static minesweeper.experi.Main.USER_DIR;
 import static minesweeper.experi.MsFrame.CELL_SIZE;
 
 public class CellButton extends JButton {
@@ -67,7 +67,7 @@ public class CellButton extends JButton {
      *                 appended.
      */
     public void setCellButtonImage(String filename) {
-        ImageIcon image = new ImageIcon(userDir + fs + "graphics" + fs + filename + ".png");
+        ImageIcon image = new ImageIcon(USER_DIR + FS + "graphics" + FS + filename + ".png");
         this.setIcon(image);
         this.setHorizontalAlignment(SwingConstants.LEFT);
     }

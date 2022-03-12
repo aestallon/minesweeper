@@ -8,10 +8,10 @@ public class Minefield {
     public static final String MINE = "x";
     public static final String NOT_MINE = " ";
 
-    private String[][] cells;
+    private final String[][] CELLS;
 
     public Minefield(int size, int mineCount) {
-        cells = createMinefield(size, mineCount);
+        CELLS = createMinefield(size, mineCount);
     }
 
     /**
@@ -125,10 +125,10 @@ public class Minefield {
      * @return the string representation of the value stored in the cell.
      */
     public String getCell(int x, int y) {
-        if (x < 0 || y < 0 || x >= this.cells.length || y >= this.cells[0].length) {
+        if (x < 0 || y < 0 || x >= this.CELLS.length || y >= this.CELLS[0].length) {
             return "";
         } else {
-            return this.cells[x][y];
+            return this.CELLS[x][y];
         }
     }
 
@@ -136,8 +136,8 @@ public class Minefield {
      * Prints the minefield's solution to standard output.
      */
     public void print() {
-        for (int i = 0; i < cells.length; i++) {
-            System.out.println(Arrays.toString(cells[i]));
+        for (int i = 0; i < CELLS.length; i++) {
+            System.out.println(Arrays.toString(CELLS[i]));
         }
 
     }
