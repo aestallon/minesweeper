@@ -136,8 +136,8 @@ public class Minefield {
      * Prints the minefield's solution to standard output.
      */
     public void print() {
-        for (int i = 0; i < CELLS.length; i++) {
-            System.out.println(Arrays.toString(CELLS[i]));
+        for (String[] rowOfCells : CELLS) {
+            System.out.println(Arrays.toString(rowOfCells));
         }
 
     }
