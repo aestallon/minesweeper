@@ -89,6 +89,15 @@ public class MsFrame extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * <b>Creates a new game of Minesweeper.</b>
+     * <p>Removes the panel containing the actual game interface from this instance and initializes it based
+     * on the parameters provided, then adds the panel back to the instance. Finally the instance is refreshed
+     * to let the user see and interact with the changes.</p>
+     *
+     * @param gameSize  The size of the game's minefield. <i>(Both horizontal and vertical)</i>
+     * @param mineCount The number of mines present in the game.
+     */
     private void createNewGame(int gameSize, int mineCount) {
         this.remove(msGrid);
         for (CellButton cb : msGrid.getCellButtons()) {
