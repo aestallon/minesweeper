@@ -16,7 +16,7 @@ public class MsFrame extends JFrame implements ActionListener {
     private static final int MEDIUM_MINE_COUNT = 10;
     private static final int LARGE_MINE_COUNT = 55;
 
-    private MinesweeperGrid msGrid;
+    private MinesweeperGrid msGrid; // játékpanel
     private JButton submitButton;
     private JButton newGameSmallButton;
     private JButton newGameMediumButton;
@@ -100,9 +100,6 @@ public class MsFrame extends JFrame implements ActionListener {
      */
     private void createNewGame(int gameSize, int mineCount) {
         this.remove(msGrid);
-        for (CellButton cb : msGrid.getCellButtons()) {
-            cb.setIcon(null);
-        }
         msGrid = new MinesweeperGrid(gameSize, mineCount);
         msGrid.setSize(gameSize * CELL_SIZE, gameSize * CELL_SIZE);
         msGrid.setLocation(0, 41);

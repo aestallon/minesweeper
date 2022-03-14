@@ -91,7 +91,9 @@ public class MinesweeperGrid extends JPanel implements MouseInputListener {
     private ArrayList<CellButton> getNeighbours(CellButton button) {
         int x = button.getxPosition();
         int y = button.getyPosition();
+
         ArrayList<CellButton> neighbouringButtons = new ArrayList<>();
+
         if (x > 0 && y > 0) neighbouringButtons.add(getCellButton(x - 1, y - 1));
         if (x > 0) neighbouringButtons.add(getCellButton(x - 1, y));
         if (x > 0 && y < size - 1) neighbouringButtons.add(getCellButton(x - 1, y + 1));
