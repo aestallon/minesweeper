@@ -5,17 +5,29 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Minefield {
 
+    /** The {@code char} representing a mine in a {@code char[][]} array. */
     public static final char MINE = 'x';
-    public static final char NOT_MINE = ' ';
 
-    private final char[][] CELLS;
+    /** The {@code int} representing a mine in an {@code int[][]} array. */
+    private static final int INT_MINE = -1;
 
+    private final char[][] cells;
+
+    /**
+     * Constructs a fully solved, pseudorandom Minesweeper
+     * board with the provided size and mine count.
+     *
+     * @param size      the {@code int} width and height of
+     *                  the board
+     * @param mineCount the {@code int} number of mines to
+     *                  be placed in the board.
+     */
     public Minefield(int size, int mineCount) {
-        CELLS = createMinefield(size, mineCount);
+        cells = createMinefield(size, mineCount);
     }
 
     /**
-     * Creates a minefield of the specified size.
+     * Creates a minesweeper board of the specified size.
      *
      * <p>Entries denoting a mine contain the {@code MINE} constant, and
      * these are spread in a pseudorandom manner. All other entries contain
@@ -28,127 +40,122 @@ public class Minefield {
      *         minefield.
      */
     private static char[][] createMinefield(int size, int mineCount) {
-        boolean[][] booleanMinefield = new boolean[size][size];
-        fillMinefieldWithMines(booleanMinefield, mineCount);
-        char[][] chMinefield = convertBooleanArrayToCharArray(booleanMinefield);
-        fillMinefieldWithNumbers(chMinefield);
-        return chMinefield;
+        int[][] intMinefield = new int[size][size];
+        fillWithMines(intMinefield, mineCount);
+        fillWithNumbers(intMinefield);
+        return convertToCharArray(intMinefield);
+
     }
 
     /**
-     * Takes a {@code boolean[][]} array as input, and sets the specified
-     * amount of its entries to {@code true}. The position of these entries
-     * are acquired in a pseudorandom manner.
+     * Takes an {@code int[][]} array as input, and sets the specified
+     * amount of its entries to {@link #INT_MINE}. The position of these
+     * entries are acquired in a pseudorandom manner.
      *
-     * <p><b>Warning!</b> If there aren't enough {@code false} entries to be
-     * changed, the method may run endlessly.
+     * <p><b>Warning!</b> If the {@code minecount} is greater than the
+     * number of elements in the {@code minefield} array, the method
+     * will run endlessly!
      *
-     * @param emptyMineField a {@code boolean[][]} array, preferably all its
-     *                       entries should be false.
-     * @param mineCount      the number of entries to be changed to true.
+     * @param minefield a {@code int[][]} array, preferably all its
+     *                  entries should be 0.
+     * @param mineCount the number of entries to be changed to
+     *                  {@link #INT_MINE}.
      */
-    private static void fillMinefieldWithMines(boolean[][] emptyMineField, int mineCount) {
+    private static void fillWithMines(int[][] minefield, int mineCount) {
         for (int i = 0; i < mineCount; i++) {
-            int minePosX = ThreadLocalRandom.current().nextInt(emptyMineField.length);
-            int minePosY = ThreadLocalRandom.current().nextInt(emptyMineField.length);
+            int x = ThreadLocalRandom.current().nextInt(minefield.length);
+            int y = ThreadLocalRandom.current().nextInt(minefield.length);
 
-            if (!emptyMineField[minePosX][minePosY]) emptyMineField[minePosX][minePosY] = true;
+            if (minefield[x][y] != INT_MINE) minefield[x][y] = INT_MINE;
             else i--;
         }
     }
 
     /**
-     * Converts a {@code boolean[][]} into a {@code char[][]}. {@code true}
-     * entries will be labeled {@link #MINE}, and {@code false} entries
-     * {@link #NOT_MINE}.
+     * Transforms an incomplete {@code int[][] minefield} into a
+     * solved one.
      *
-     * @param booleanArray a {@code boolean[][]} array
-     * @return a {@code char[][]} array
+     * <p>An {@code int[][]} array is taken as input, which is
+     * partially complete: entries symbolising mines should be set
+     * already to {@link #INT_MINE}, the rest should be {@code 0}.
+     *
+     * <p>All non-mine entries are set to represent the number of
+     * Moore-neighbouring mines the given entry has.
+     *
+     * @param minefield an {@code int[][]} array with some entries
+     *                  already set to {@link #INT_MINE}.
      */
-    private static char[][] convertBooleanArrayToCharArray(boolean[][] booleanArray) {
-        char[][] chArray = new char[booleanArray.length][booleanArray.length];
-        for (int i = 0; i < booleanArray.length; i++) {
-            for (int j = 0; j < booleanArray.length; j++) {
-                if (booleanArray[i][j]) chArray[i][j] = MINE;
-                else chArray[i][j] = NOT_MINE;
-            }
-        }
-        return chArray;
-    }
-
-    /**
-     * Methodically loop through an array and fill out it's missing
-     * entries based on the number of {@code MINE} entries neighbouring
-     * them.
-     *
-     * <p><i>Calling this method on an array not containing any
-     * {@code MINE} entries will set every entry to {@code '0'}. It is
-     * recommended to only use this method on an array already
-     * containing said entries.</i>
-     *
-     * @param minefieldWithMines {@code char[][]} array representing a
-     *                           minesweeper solution.
-     */
-    private static void fillMinefieldWithNumbers(char[][] minefieldWithMines) {
-        for (int i = 0; i < minefieldWithMines.length; i++) {
-            for (int j = 0; j < minefieldWithMines.length; j++) {
-                int neighbourMineCounter = 0;
-
-                // We only do anything if we are not standing on a mine.
-                if (minefieldWithMines[i][j] != MINE) {
-
-                    // Check the neighbouring cells.
-                    if (i != 0 && minefieldWithMines[i - 1][j] == MINE)
-                        neighbourMineCounter++;
-                    if (i != (minefieldWithMines.length - 1) && minefieldWithMines[i + 1][j] == MINE)
-                        neighbourMineCounter++;
-                    if (j != 0 && minefieldWithMines[i][j - 1] == MINE)
-                        neighbourMineCounter++;
-                    if (j != (minefieldWithMines.length - 1) && minefieldWithMines[i][j + 1] == MINE)
-                        neighbourMineCounter++;
-
-                    // Check diagonally neighbouring cells.
-                    // Top-left neighbour
-                    if (i != 0 && j != 0 && minefieldWithMines[i - 1][j - 1] == MINE)
-                        neighbourMineCounter++;
-                    // Top-right neighbour
-                    if (i != (minefieldWithMines.length - 1) && j != 0 && minefieldWithMines[i + 1][j - 1] == MINE)
-                        neighbourMineCounter++;
-                    // Bottom-left neighbour
-                    if (i != 0 && j != (minefieldWithMines.length - 1) && minefieldWithMines[i - 1][j + 1] == MINE)
-                        neighbourMineCounter++;
-                    // Bottom-right neighbour
-                    if (i != (minefieldWithMines.length - 1) && j != (minefieldWithMines.length - 1) &&
-                            minefieldWithMines[i + 1][j + 1] == MINE)
-                        neighbourMineCounter++;
-
-                    //Store how many neighbouring mines we found in the cell.
-                    minefieldWithMines[i][j] = (char) (neighbourMineCounter + '0');
+    private static void fillWithNumbers(int[][] minefield) {
+        for (int i = 0; i < minefield.length; i++) {
+            for (int j = 0; j < minefield.length; j++) {
+                if (minefield[i][j] == INT_MINE) {
+                    incrementNotMineNeighbours(minefield, i, j);
                 }
-
             }
         }
     }
 
     /**
-     * Returns the string value of a minefield's cell. If the parameters
-     * are out of bounds, an empty string is returned.
+     * @param arr an {@code int[][]} array to be modified
+     * @param r   the {@code int} row of a given entry
+     * @param c   the {@code int} coloumn of a given entry
+     */
+    private static void incrementNotMineNeighbours(int[][] arr, int r, int c) {
+        final int[] dirs = {-1, 0, 1};
+        for (int dirR : dirs) {
+            for (int dirC : dirs) {
+                if ((r + dirR >= 0 && r + dirR < arr.length) &&
+                        (c + dirC >= 0 && c + dirC < arr.length) &&
+                        (arr[r + dirR][c + dirC] != INT_MINE) &&
+                        !(dirR == 0 && dirC == 0)
+                ) {
+                    arr[r + dirR][c + dirC]++;
+                }
+            }
+        }
+    }
+
+    /**
+     * Converts an {@code int[][]} minefield into a {@code char[][]}
+     * version. Digits are preserved as characters, {@link #INT_MINE}
+     * entries are converted to {@link #MINE}.
+     *
+     * @param minefield an {@code int[][]} array representing a
+     *                  minesweeper board.
+     * @return a {@code char[][]} array doing the same.
+     */
+    private static char[][] convertToCharArray(int[][] minefield) {
+        char[][] result = new char[minefield.length][minefield[0].length];
+        for (int i = 0; i < minefield.length; i++) {
+            for (int j = 0; j < minefield[0].length; j++) {
+                if (minefield[i][j] == INT_MINE) result[i][j] = MINE;
+                else result[i][j] = (char) (minefield[i][j] + '0');
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns the {@code char} value of a minefield's cell. If the
+     * parameters are out of bounds, the {@code null character} is
+     * returned.
      *
      * @param x horizontal position of the cell.
      * @param y vertical position of the cell.
-     * @return the string representation of the value stored in the cell.
+     * @return the {@code char} representation of the value stored
+     *         in the cell.
      */
     public char getCell(int x, int y) {
-        if (x < 0 || y < 0 || x >= this.CELLS.length || y >= this.CELLS[0].length) {
+        if (x < 0 || y < 0 || x >= this.cells.length || y >= this.cells[0].length) {
             return '\0';
         } else {
-            return this.CELLS[x][y];
+            return this.cells[x][y];
         }
     }
 
     /** Prints the minefield's solution to standard output. */
     public void print() {
-        for (char[] rowOfCells : CELLS) {
+        for (char[] rowOfCells : cells) {
             System.out.println(Arrays.toString(rowOfCells));
         }
 
