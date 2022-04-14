@@ -3,8 +3,8 @@ package hu.aestallon.minesweeper;
 import java.io.File;
 
 public class Main {
-    static final String FS = System.getProperty("file.separator");
-    static final String USER_DIR = System.getProperty("user.dir");
+    public static final String FS = System.getProperty("file.separator");
+    public static final String USER_DIR = System.getProperty("user.dir");
 
     private static final String[] GRAPHICS_FILES =
             {"0", "1", "2", "3", "4", "5", "6", "7", "8", "x", "defaultImage", "suspected"};

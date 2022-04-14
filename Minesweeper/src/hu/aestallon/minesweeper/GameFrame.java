@@ -16,15 +16,15 @@ public class GameFrame extends JFrame implements ActionListener {
     private static final int MEDIUM_MINE_COUNT = 10;
     private static final int LARGE_MINE_COUNT = 55;
 
-    private GamePanel msGrid; // játékpanel
-    private JButton submitButton;
-    private JButton newGameSmallButton;
-    private JButton newGameMediumButton;
-    private JButton newGameLargeButton;
+    private GamePanel gamePanel;
+    private final JButton submitButton;
+    private final JButton newGameSmallButton;
+    private final JButton newGameMediumButton;
+    private final JButton newGameLargeButton;
 
     public GameFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(415, 480);
+        this.setSize(335, 80);
         this.setLayout(null);
 
         newGameSmallButton = new JButton("Small");
@@ -51,14 +51,9 @@ public class GameFrame extends JFrame implements ActionListener {
         submitButton.setBackground(Color.GREEN);
         submitButton.addActionListener(this);
 
-        msGrid = new GamePanel(10, 10);
-        msGrid.setSize(400, 400);
-        msGrid.setLocation(0, 41);
-
         this.add(newGameSmallButton);
         this.add(newGameMediumButton);
         this.add(newGameLargeButton);
-        this.add(msGrid);
         this.add(submitButton);
         this.setResizable(false);
         this.setTitle("Home-Cooked Minesweeper");
@@ -77,11 +72,11 @@ public class GameFrame extends JFrame implements ActionListener {
             createNewGame(LARGE, LARGE_MINE_COUNT);
         } else if (e.getSource() == submitButton) {
             int foundMineCounter = 0;
-            for (CellButton cb : msGrid.getCellButtons()) {
+            for (CellButton cb : gamePanel.getCellButtons()) {
                 if (cb.isSus() && cb.isMine()) foundMineCounter++;
             }
-            if (foundMineCounter == msGrid.getMineCount()) {
-                msGrid.getCellButtons().forEach(CellButton::flagUncovered);
+            if (foundMineCounter == gamePanel.getMineCount()) {
+                gamePanel.getCellButtons().forEach(CellButton::setPassive);
                 JOptionPane.showMessageDialog(null, "Gratulálunk nyertél!!!!");
             }
         }
@@ -92,7 +87,7 @@ public class GameFrame extends JFrame implements ActionListener {
      *
      * <p>Removes the panel containing the actual game interface from
      * this instance and initializes it based on the parameters
-     * provided, then adds the panel back to the instance. Finally the
+     * provided, then adds the panel back to the instance. Finally, the
      * instance is refreshed to let the user see and interact with the
      * changes.
      *
@@ -101,23 +96,20 @@ public class GameFrame extends JFrame implements ActionListener {
      * @param mineCount The number of mines present in the game.
      */
     private void createNewGame(int gameSize, int mineCount) {
-        this.remove(msGrid);
-        msGrid = new GamePanel(gameSize, mineCount);
-        msGrid.setSize(gameSize * CELL_SIZE, gameSize * CELL_SIZE);
-        msGrid.setLocation(0, 41);
-        this.add(msGrid);
-        if (gameSize == SMALL)
-            this.setBackground(new Color(255, 208, 138));
-        else if (gameSize == LARGE)
-            this.setBackground(new Color(255, 183, 138));
+        if (gamePanel != null) remove(gamePanel);
+        gamePanel = new GamePanel(gameSize, mineCount);
+        gamePanel.setSize(gameSize * CELL_SIZE, gameSize * CELL_SIZE);
+        gamePanel.setLocation(0, 41);
+        this.add(gamePanel);
 
-            /* Ez egy meglehetősen favágó módszer arra, hogy az új tartalom *
-             * megjelenjen, de az `updateComponentTreeUI` felülírja a gomb- *
-             * beállításokat, és így az aknakereső gombikonjai bugolni kez- *
-             * denek.Ha valakinek van jobb módszere (azon kívül, hogy írni  *
-             * kéne egy teljesen custom `look&feel`-t, szóljon.             */
+        /* Ez egy meglehetősen favágó módszer arra, hogy az új tartalom *
+         * megjelenjen, de az `updateComponentTreeUI` felülírja a gomb- *
+         * beállításokat, és így az aknakereső gombikonjai bugolni kez- *
+         * denek.Ha valakinek van jobb módszere (azon kívül, hogy írni  *
+         * kéne egy teljesen custom `look&feel`-t, szóljon.             */
+
+        // SwingUtilities.updateComponentTreeUI(this);
         this.setSize(gameSize * CELL_SIZE + 16, gameSize * CELL_SIZE + 80);
         this.setSize(gameSize * CELL_SIZE + 15, gameSize * CELL_SIZE + 80);
-//            SwingUtilities.updateComponentTreeUI(this);
     }
 }

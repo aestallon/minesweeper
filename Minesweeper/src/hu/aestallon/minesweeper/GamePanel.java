@@ -8,82 +8,77 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GamePanel extends JPanel implements MouseInputListener {
-    private Minefield minefield;
-    private int size;
-    private int mineCount;
-    private List<CellButton> cellButtons;
+    private final int size;
+    private final int mineCount;
+    private final List<CellButton> cellButtons;
 
 
     public GamePanel(int size, int mineCount) {
         this.size = size;
         this.mineCount = mineCount;
-        minefield = new Minefield(size, mineCount);
+        Minefield minefield = new Minefield(size, mineCount);
         cellButtons = new ArrayList<>();
         this.setLayout(new GridLayout(size, size, 0, 0));
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                CellButton cellButton = new CellButton(i, j);
-                cellButton.setValue(minefield.getCell(i, j));
-                if (cellButton.getValue().equals(Minefield.MINE))
-                    cellButton.setMine(true);
-
+                CellButton cellButton = new CellButton(i, j, minefield.getCell(i, j));
                 this.add(cellButton);
                 cellButtons.add(cellButton);
                 cellButton.addMouseListener(this);
             }
         }
-        minefield.print();
+        minefield.print();      // DEBUGGING
         this.setVisible(true);
     }
 
     @Override
     public void mousePressed(MouseEvent event) {
         CellButton button = (CellButton) event.getSource();
-        if (SwingUtilities.isLeftMouseButton(event) && !button.isSus() && !button.isUncovered()) {
+        if (SwingUtilities.isLeftMouseButton(event) && !button.isSus() && button.isInteractive()) {
             button.setUncovered();
-            if (button.getValue().equals("0")) {
+            if (button.getValue() == '0') {
                 autoUncoverZero(button);
             }
             if (button.isMine()) {
-                cellButtons.forEach(CellButton::flagUncovered);
+                cellButtons.forEach(CellButton::setPassive);
                 JOptionPane.showMessageDialog(null, "Sajnos vesztettél :(");
             }
-        } else if (SwingUtilities.isRightMouseButton(event) && !button.isUncovered()) {
+        } else if (SwingUtilities.isRightMouseButton(event) && button.isInteractive()) {
             button.setSus(!button.isSus());
         }
     }
 
     /**
-     * Returns a <code>cellButton</code> from this instance's <code>cellbuttons</code> array-list.
+     * Returns a {@code CellButton} from this instance's {@link #cellButtons}
+     * based on the grid positions provided.
      *
-     * @param x horizontal position of the cellButton
-     * @param y vertical position of the cellButton
-     * @return a cellButton, if it can be found based on the above parameters, else <code>null</code>.
+     * @param x {@code int} horizontal position of the cellButton
+     * @param y {@code int} vertical position of the cellButton
+     * @return a {@code CellButton}, if it can be found , else {@code null}.
      */
     private CellButton getCellButton(int x, int y) {
-        for (CellButton cb : cellButtons) {
-            if (cb.getxPosition() == x && cb.getyPosition() == y) {
-                return cb;
-            }
-        }
-        return null;
+        return cellButtons.stream()
+                .filter(cb -> cb.getXPosition() == x && cb.getYPosition() == y)
+                .findAny().orElse(null);
     }
 
     /**
-     * Provides every cellButton neighbouring the one provided as parameter.
+     * Provides every {@code CellButton} neighbouring the one provided.
      *
-     * <p>The search is performed on the <code>cellButtons</code> array-list of this instance.</p>
+     * <p>The search is performed on the {@code List&lt;CellButton&gt;}
+     * of this instance.
      *
-     * @param button the cellButton in question.
-     * @return an ArrayList containing all buttons neighbouring the above cellButton.
+     * @param button the {@code CellButton} in question.
+     * @return a {@code List&lt;CellButton&gt;} containing all buttons
+     *         neighbouring the above cellButton.
      *         <i>Diagonal neighbours included.</i>
      */
-    private ArrayList<CellButton> getNeighbours(CellButton button) {
-        int x = button.getxPosition();
-        int y = button.getyPosition();
+    private List<CellButton> getNeighbours(CellButton button) {
+        int x = button.getXPosition();
+        int y = button.getYPosition();
 
-        ArrayList<CellButton> neighbouringButtons = new ArrayList<>();
+        List<CellButton> neighbouringButtons = new ArrayList<>();
 
         if (x > 0 && y > 0) neighbouringButtons.add(getCellButton(x - 1, y - 1));
         if (x > 0) neighbouringButtons.add(getCellButton(x - 1, y));
@@ -111,19 +106,18 @@ public class GamePanel extends JPanel implements MouseInputListener {
      *               {@code "0"}!</b>
      */
     private void autoUncoverZero(CellButton button) {
-        getNeighbours(button).stream()
-                .filter(cellButton -> !cellButton.isUncovered())
-                .forEach(cellButton -> {
-                    cellButton.setUncovered();
-                    if (cellButton.getValue().equals("0")) autoUncoverZero(cellButton);
-                });
-//        ArrayList<CellButton> buttonNeighbours = getNeighbours(button);
-//        for (CellButton cb : buttonNeighbours) {
-//            if (!cb.isUncovered()) {
-//                cb.setUncovered();
-//                if (cb.getValue().equals("0")) autoUncoverZero(cb);
-//            }
-//        }
+//        getNeighbours(button).stream()
+//                .filter(CellButton::isInteractive)
+//                .forEach(cellButton -> {
+//                    cellButton.setUncovered();
+//                    if (cellButton.getValue() == '0') autoUncoverZero(cellButton);
+//                });
+        for (CellButton cb : getNeighbours(button)) {
+            if (cb.isInteractive()) {
+                cb.setUncovered();
+                if (cb.getValue() == '0') autoUncoverZero(cb);
+            }
+        }
     }
 
     public int getMineCount() {
