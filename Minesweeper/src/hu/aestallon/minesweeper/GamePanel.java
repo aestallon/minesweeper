@@ -64,6 +64,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
         return cellButtons.stream()
                 .filter(cb -> (x - cb.getXPosition() <= 1) && (x - cb.getXPosition() >= -1))
                 .filter(cb -> (y - cb.getYPosition() <= 1) && (y - cb.getYPosition() >= -1))
+                .dropWhile(cb -> cb.getXPosition() == x && cb.getYPosition() == y)
                 .collect(Collectors.toList());
     }
 
