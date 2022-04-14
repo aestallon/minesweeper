@@ -44,11 +44,14 @@ public class GameFrame extends JFrame {
         submitButton.setLocation(240, 0);
         submitButton.setBackground(Color.GREEN);
         submitButton.addActionListener(e -> {
-            long foundMineCounter = gamePanel.getCellButtons().stream()
+            long foundMines= gamePanel.getCellButtons().stream()
                     .filter(cb -> cb.isSus() && cb.isMine())
                     .count();
+            long mineCount = gamePanel.getCellButtons().stream()
+                    .filter(CellButton::isMine)
+                    .count();
 
-            if (foundMineCounter == gamePanel.getMineCount()) {
+            if (foundMines == mineCount) {
                 gamePanel.getCellButtons().forEach(CellButton::setPassive);
                 JOptionPane.showMessageDialog(null, "Gratulálunk nyertél!!!!");
             }
@@ -84,16 +87,8 @@ public class GameFrame extends JFrame {
         gamePanel = new GamePanel(gameSize, mineCount);
         gamePanel.setSize(gameSize * CELL_SIZE, gameSize * CELL_SIZE);
         gamePanel.setLocation(0, 41);
+        this.setSize(gamePanel.getWidth() + 15, gamePanel.getHeight() + 80);
         this.add(gamePanel);
-
-        /* Ez egy meglehetősen favágó módszer arra, hogy az új tartalom *
-         * megjelenjen, de az `updateComponentTreeUI` felülírja a gomb- *
-         * beállításokat, és így az aknakereső gombikonjai bugolni kez- *
-         * denek.Ha valakinek van jobb módszere (azon kívül, hogy írni  *
-         * kéne egy teljesen custom `look&feel`-t, szóljon.             */
-
-        // SwingUtilities.updateComponentTreeUI(this);
-        this.setSize(gameSize * CELL_SIZE + 16, gameSize * CELL_SIZE + 80);
-        this.setSize(gameSize * CELL_SIZE + 15, gameSize * CELL_SIZE + 80);
+        SwingUtilities.updateComponentTreeUI(this);
     }
 }

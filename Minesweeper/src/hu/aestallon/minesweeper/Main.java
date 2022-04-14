@@ -23,8 +23,8 @@ public class Main {
      * Checks the existence of the image files necessary for the
      * program's operation.
      *
-     * @throws Exception if at least one file is missing.
-     *                   <i>Custom message included.</i>
+     * @throws FileNotFoundException if at least one file is missing.
+     *                               <i>Custom message included.</i>
      */
     private static void CheckIfGraphicsSpritesExist() throws FileNotFoundException {
         for (String filename : GRAPHICS_FILES) {
