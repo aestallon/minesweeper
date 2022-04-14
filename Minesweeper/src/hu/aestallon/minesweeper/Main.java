@@ -1,6 +1,7 @@
 package hu.aestallon.minesweeper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class Main {
     public static final String FS = System.getProperty("file.separator");
@@ -13,21 +14,24 @@ public class Main {
         try {
             CheckIfGraphicsSpritesExist();
             new GameFrame();
-        } catch (Exception ex) {
+        } catch (FileNotFoundException ex) {
             System.err.println(ex.getMessage());
         }
     }
 
     /**
-     * A simple method for checking the existence of the image files necessary for the program's operation.
+     * Checks the existence of the image files necessary for the
+     * program's operation.
      *
-     * @throws Exception if at least one file is missing. <i>Custom message included.</i>
+     * @throws Exception if at least one file is missing.
+     *                   <i>Custom message included.</i>
      */
-    private static void CheckIfGraphicsSpritesExist() throws Exception {
+    private static void CheckIfGraphicsSpritesExist() throws FileNotFoundException {
         for (String filename : GRAPHICS_FILES) {
             File file = new File(USER_DIR + FS + "graphics" + FS + filename + ".png");
-            if (!file.exists()) throw new Exception("One or more sprites cannot be found. " +
-                    "Please check the integrity of the `graphics` folder.");
+            if (!file.exists())
+                throw new FileNotFoundException("One or more sprites cannot be found. " +
+                        "Please check the integrity of the `graphics` folder.");
         }
     }
 

@@ -2,10 +2,8 @@ package hu.aestallon.minesweeper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class GameFrame extends JFrame implements ActionListener {
+public class GameFrame extends JFrame {
     public static final int CELL_SIZE = 40;
 
     private static final int SMALL = 8;
@@ -17,69 +15,55 @@ public class GameFrame extends JFrame implements ActionListener {
     private static final int LARGE_MINE_COUNT = 55;
 
     private GamePanel gamePanel;
-    private final JButton submitButton;
-    private final JButton newGameSmallButton;
-    private final JButton newGameMediumButton;
-    private final JButton newGameLargeButton;
 
     public GameFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(335, 80);
         this.setLayout(null);
 
-        newGameSmallButton = new JButton("Small");
+        JButton newGameSmallButton = new JButton("Small");
         newGameSmallButton.setSize(80, 40);
         newGameSmallButton.setLocation(0, 0);
         newGameSmallButton.setBackground(new Color(255, 230, 138));
-        newGameSmallButton.addActionListener(this);
+        newGameSmallButton.addActionListener(e -> createNewGame(SMALL, SMALL_MINE_COUNT));
 
-        newGameMediumButton = new JButton("Medium");
+        JButton newGameMediumButton = new JButton("Medium");
         newGameMediumButton.setSize(80, 40);
         newGameMediumButton.setLocation(80, 0);
         newGameMediumButton.setBackground(new Color(255, 208, 138));
-        newGameMediumButton.addActionListener(this);
+        newGameMediumButton.addActionListener(e -> createNewGame(MEDIUM, MEDIUM_MINE_COUNT));
 
-        newGameLargeButton = new JButton("Large");
+        JButton newGameLargeButton = new JButton("Large");
         newGameLargeButton.setSize(80, 40);
         newGameLargeButton.setLocation(160, 0);
         newGameLargeButton.setBackground(new Color(255, 183, 138));
-        newGameLargeButton.addActionListener(this);
+        newGameLargeButton.addActionListener(e -> createNewGame(LARGE, LARGE_MINE_COUNT));
 
-        submitButton = new JButton("Submit");
+        JButton submitButton = new JButton("Submit");
         submitButton.setSize(80, 40);
         submitButton.setLocation(240, 0);
         submitButton.setBackground(Color.GREEN);
-        submitButton.addActionListener(this);
+        submitButton.addActionListener(e -> {
+            long foundMineCounter = gamePanel.getCellButtons().stream()
+                    .filter(cb -> cb.isSus() && cb.isMine())
+                    .count();
+
+            if (foundMineCounter == gamePanel.getMineCount()) {
+                gamePanel.getCellButtons().forEach(CellButton::setPassive);
+                JOptionPane.showMessageDialog(null, "Gratulálunk nyertél!!!!");
+            }
+        });
 
         this.add(newGameSmallButton);
         this.add(newGameMediumButton);
         this.add(newGameLargeButton);
         this.add(submitButton);
+
         this.setResizable(false);
         this.setTitle("Home-Cooked Minesweeper");
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == newGameSmallButton) {
-            createNewGame(SMALL, SMALL_MINE_COUNT);
-        } else if (e.getSource() == newGameMediumButton) {
-            createNewGame(MEDIUM, MEDIUM_MINE_COUNT);
-        } else if (e.getSource() == newGameLargeButton) {
-            createNewGame(LARGE, LARGE_MINE_COUNT);
-        } else if (e.getSource() == submitButton) {
-            int foundMineCounter = 0;
-            for (CellButton cb : gamePanel.getCellButtons()) {
-                if (cb.isSus() && cb.isMine()) foundMineCounter++;
-            }
-            if (foundMineCounter == gamePanel.getMineCount()) {
-                gamePanel.getCellButtons().forEach(CellButton::setPassive);
-                JOptionPane.showMessageDialog(null, "Gratulálunk nyertél!!!!");
-            }
-        }
     }
 
     /**
