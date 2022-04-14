@@ -68,13 +68,17 @@ public class Minefield {
     }
 
     /**
-     * Methodically loop through an array and fill out it's missing entries based on the number of <code>MINE</code>
-     * entries neighbouring them.<br>
-     * <p></p><i>Calling this method on an array not containing any <code>MINE</code> entries will set every entry
-     * to <code>"0"</code>. It is recommended to only use this method on an array already containing said entries.</i>
+     * Methodically loop through an array and fill out it's missing
+     * entries based on the number of {@code MINE} entries neighbouring
+     * them.
      *
+     * <p><i>Calling this method on an array not containing any
+     * {@code MINE} entries will set every entry to {@code "0"}. It is
+     * recommended to only use this method on an array already
+     * containing said entries.</i>
      *
-     * @param minefieldWithMines <code>String[][]</code> array containing at least 0 <code>MINE</code> entries.
+     * @param minefieldWithMines {@code String[][]} array containing at
+     *                           least 0 {@code MINE} entries.
      */
     private static void fillMinefieldWithNumbers(String[][] minefieldWithMines) {
         for (int i = 0; i < minefieldWithMines.length; i++) {
@@ -118,7 +122,8 @@ public class Minefield {
     }
 
     /**
-     * Returns the string value of a minefield's cell. If the parameters are out of bounds, an empty string is returned.
+     * Returns the string value of a minefield's cell. If the parameters
+     * are out of bounds, an empty string is returned.
      *
      * @param x horizontal position of the cell.
      * @param y vertical position of the cell.
@@ -132,9 +137,7 @@ public class Minefield {
         }
     }
 
-    /**
-     * Prints the minefield's solution to standard output.
-     */
+    /** Prints the minefield's solution to standard output. */
     public void print() {
         for (String[] rowOfCells : CELLS) {
             System.out.println(Arrays.toString(rowOfCells));

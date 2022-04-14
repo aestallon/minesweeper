@@ -7,14 +7,14 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MinesweeperGrid extends JPanel implements MouseInputListener {
+public class GamePanel extends JPanel implements MouseInputListener {
     private Minefield minefield;
     private int size;
     private int mineCount;
     private List<CellButton> cellButtons;
 
 
-    public MinesweeperGrid(int size, int mineCount) {
+    public GamePanel(int size, int mineCount) {
         this.size = size;
         this.mineCount = mineCount;
         minefield = new Minefield(size, mineCount);

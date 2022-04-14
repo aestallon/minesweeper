@@ -40,7 +40,7 @@ public class CellButton extends JButton {
         this.setMargin(new Insets(0, 0, 0, 0));
         this.setContentAreaFilled(false);
         this.setFocusable(false);
-        this.setPreferredSize(new Dimension(MinesweeperFrame.CELL_SIZE, MinesweeperFrame.CELL_SIZE));
+        this.setPreferredSize(new Dimension(GameFrame.CELL_SIZE, GameFrame.CELL_SIZE));
         this.setHorizontalAlignment(SwingConstants.LEFT);
         this.setCellButtonImage("defaultImage");
 

@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             CheckIfGraphicsSpritesExist();
-            new MinesweeperFrame();
+            new GameFrame();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -29,23 +29,6 @@ public class Main {
             if (!file.exists()) throw new Exception("One or more sprites cannot be found. " +
                     "Please check the integrity of the `graphics` folder.");
         }
-    }
-
-    /**
-     *
-     * @param array
-     * @return
-     * @throws Exception
-     */
-    private static int sum(int[] array) throws Exception {
-        if (array.length == 0) {
-            throw new Exception();
-        }
-        int result = 0;
-        for (int i : array) {
-            result += i;
-        }
-        return result;
     }
 
 }
