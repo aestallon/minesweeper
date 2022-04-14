@@ -131,4 +131,18 @@ public class CellButton extends JButton {
         return value;
     }
 
+    /**
+     * Checks if another {@code CellButton} is the Moore-neighbour
+     * of this instance.
+     *
+     * @param cellButton a {@code CellButton}
+     * @return true, if they are neighbours, otherwise false.
+     */
+    public boolean isNeighbourOf(CellButton cellButton) {
+        if (this.equals(cellButton)) return false;
+        int deltaX = this.xPosition - cellButton.xPosition;
+        int deltaY = this.yPosition - cellButton.yPosition;
+        return deltaX >= -1 && deltaX <= 1 && deltaY >= -1 && deltaY <= 1;
+    }
+
 }

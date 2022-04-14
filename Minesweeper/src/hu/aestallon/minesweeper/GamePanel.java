@@ -60,11 +60,8 @@ public class GamePanel extends JPanel implements MouseInputListener {
      *         <i>Diagonal neighbours included.</i>
      */
     private List<CellButton> getNeighbours(CellButton button) {
-        int x = button.getXPosition(), y = button.getYPosition();
         return cellButtons.stream()
-                .filter(cb -> (x - cb.getXPosition() <= 1) && (x - cb.getXPosition() >= -1))
-                .filter(cb -> (y - cb.getYPosition() <= 1) && (y - cb.getYPosition() >= -1))
-                .dropWhile(cb -> cb.getXPosition() == x && cb.getYPosition() == y)
+                .filter(cb -> cb.isNeighbourOf(button))
                 .collect(Collectors.toList());
     }
 
