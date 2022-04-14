@@ -86,8 +86,8 @@ public class Minefield {
      * recommended to only use this method on an array already
      * containing said entries.</i>
      *
-     * @param minefieldWithMines {@code char[][]} array containing at
-     *                           least 0 {@code MINE} entries.
+     * @param minefieldWithMines {@code char[][]} array representing a
+     *                           minesweeper solution.
      */
     private static void fillMinefieldWithNumbers(char[][] minefieldWithMines) {
         for (int i = 0; i < minefieldWithMines.length; i++) {
@@ -100,7 +100,7 @@ public class Minefield {
                     // Check the neighbouring cells.
                     if (i != 0 && minefieldWithMines[i - 1][j] == MINE)
                         neighbourMineCounter++;
-                    if (i != (minefieldWithMines.length - 1) && minefieldWithMines[i + 1][j]==MINE)
+                    if (i != (minefieldWithMines.length - 1) && minefieldWithMines[i + 1][j] == MINE)
                         neighbourMineCounter++;
                     if (j != 0 && minefieldWithMines[i][j - 1] == MINE)
                         neighbourMineCounter++;
