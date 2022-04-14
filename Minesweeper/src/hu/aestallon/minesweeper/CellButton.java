@@ -93,14 +93,6 @@ public class CellButton extends JButton {
         this.setIcon(image);
     }
 
-    public int getXPosition() {
-        return xPosition;
-    }
-
-    public int getYPosition() {
-        return yPosition;
-    }
-
     /**
      * @return true if the instance is suspected to be hiding
      *         a mine, false otherwise.
