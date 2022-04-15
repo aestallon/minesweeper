@@ -23,13 +23,12 @@ public class CellButton extends JButton {
     private boolean isSus = false;
     private boolean interactive = true;
 
-
     /**
      * Constructs a new instance with the grid positions provided.
      *
      * @param xPosition {@code int} horizontal position in the grid
      * @param yPosition {@code int} vertical position in the grid.
-     * @param value     a {@code String} value.
+     * @param value     a {@code char} value.
      */
     public CellButton(int xPosition, int yPosition, char value) {
         this.xPosition = xPosition;
@@ -125,15 +124,15 @@ public class CellButton extends JButton {
 
     /**
      * Checks if another {@code CellButton} is the Moore-neighbour
-     * of this instance.
+     * of this instance, based on stored `x` and `y` positions.
      *
-     * @param cellButton a {@code CellButton}
+     * @param anotherCB a {@code CellButton}
      * @return true, if they are neighbours, otherwise false.
      */
-    public boolean isNeighbourOf(CellButton cellButton) {
-        if (this.equals(cellButton)) return false;
-        int deltaX = this.xPosition - cellButton.xPosition;
-        int deltaY = this.yPosition - cellButton.yPosition;
+    public boolean isNeighbourOf(CellButton anotherCB) {
+        if (this.equals(anotherCB)) return false;
+        int deltaX = this.xPosition - anotherCB.xPosition;
+        int deltaY = this.yPosition - anotherCB.yPosition;
         return deltaX >= -1 && deltaX <= 1 && deltaY >= -1 && deltaY <= 1;
     }
 

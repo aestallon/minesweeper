@@ -8,9 +8,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * An extended {@link JPanel} displaying an interactive Minesweeper
+ * board.
+ */
 public class GamePanel extends JPanel implements MouseInputListener {
+
+    /** Contains every {@link CellButton} present in this instance. */
     private final List<CellButton> cellButtons;
 
+    /**
+     * Constructs an instance with the given size (both height and width)
+     * and number of mines.
+     *
+     * @param size the {@code int} height and width of the board
+     * @param mineCount the {@code int} number of mines in the board
+     */
     public GamePanel(int size, int mineCount) {
         Minefield minefield = new Minefield(size, mineCount);
         cellButtons = new ArrayList<>();

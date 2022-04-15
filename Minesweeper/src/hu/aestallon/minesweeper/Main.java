@@ -24,7 +24,6 @@ public class Main {
      * program's operation.
      *
      * @throws FileNotFoundException if at least one file is missing.
-     *                               <i>Custom message included.</i>
      */
     private static void CheckIfGraphicsSpritesExist() throws FileNotFoundException {
         for (String filename : GRAPHICS_FILES) {

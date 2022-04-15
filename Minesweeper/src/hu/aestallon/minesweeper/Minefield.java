@@ -3,13 +3,27 @@ package hu.aestallon.minesweeper;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Provides objects representing the values of a Minesweeper board.
+ *
+ * <p>The {@link #Minefield(int, int)} constructor can be called to
+ * generate a pseudorandom board. Individual cell values can be
+ * accessed with the {@link #getCell(int, int)} method. These values
+ * are returned as {@code char}s, and can be interpreted as follows:
+ *
+ * <ul>
+ * <li>Cells with a value denoting a digit {@code '0'...'8'} are not
+ * mines, the digit represents the number of Moore-neighbouring
+ * cells that are mines.
+ * <li>Cells with value {@link #MINE} represent a mine.
+ * </ul>
+ *
+ * <p>The {@link #print()} method is provided for debugging purposes.
+ */
 public class Minefield {
 
-    /** The {@code char} representing a mine in a {@code char[][]} array. */
+    /** The value representing a mine in a minesweeper board. */
     public static final char MINE = 'x';
-
-    /** The {@code int} representing a mine in an {@code int[][]} array. */
-    private static final int INT_MINE = -1;
 
     private final char[][] cells;
 
@@ -49,24 +63,24 @@ public class Minefield {
 
     /**
      * Takes an {@code int[][]} array as input, and sets the specified
-     * amount of its entries to {@link #INT_MINE}. The position of these
+     * amount of its entries to {@link #MINE}. The position of these
      * entries are acquired in a pseudorandom manner.
      *
-     * <p><b>Warning!</b> If the {@code minecount} is greater than the
+     * <p><b>Warning!</b> If the {@code mine-count} is greater than the
      * number of elements in the {@code minefield} array, the method
      * will run endlessly!
      *
      * @param minefield a {@code int[][]} array, preferably all its
      *                  entries should be 0.
      * @param mineCount the number of entries to be changed to
-     *                  {@link #INT_MINE}.
+     *                  {@link #MINE}.
      */
     private static void fillWithMines(int[][] minefield, int mineCount) {
         for (int i = 0; i < mineCount; i++) {
             int x = ThreadLocalRandom.current().nextInt(minefield.length);
             int y = ThreadLocalRandom.current().nextInt(minefield.length);
 
-            if (minefield[x][y] != INT_MINE) minefield[x][y] = INT_MINE;
+            if (minefield[x][y] != MINE) minefield[x][y] = MINE;
             else i--;
         }
     }
@@ -77,18 +91,18 @@ public class Minefield {
      *
      * <p>An {@code int[][]} array is taken as input, which is
      * partially complete: entries symbolising mines should be set
-     * already to {@link #INT_MINE}, the rest should be {@code 0}.
+     * already to {@link #MINE}, the rest should be {@code 0}.
      *
      * <p>All non-mine entries are set to represent the number of
      * Moore-neighbouring mines the given entry has.
      *
      * @param minefield an {@code int[][]} array with some entries
-     *                  already set to {@link #INT_MINE}.
+     *                  already set to {@link #MINE}.
      */
     private static void fillWithNumbers(int[][] minefield) {
         for (int i = 0; i < minefield.length; i++) {
             for (int j = 0; j < minefield.length; j++) {
-                if (minefield[i][j] == INT_MINE) {
+                if (minefield[i][j] == MINE) {
                     incrementNotMineNeighbours(minefield, i, j);
                 }
             }
@@ -106,7 +120,7 @@ public class Minefield {
             for (int dirC : dirs) {
                 if ((r + dirR >= 0 && r + dirR < arr.length) &&
                         (c + dirC >= 0 && c + dirC < arr.length) &&
-                        (arr[r + dirR][c + dirC] != INT_MINE) &&
+                        (arr[r + dirR][c + dirC] != MINE) &&
                         !(dirR == 0 && dirC == 0)
                 ) {
                     arr[r + dirR][c + dirC]++;
@@ -117,8 +131,8 @@ public class Minefield {
 
     /**
      * Converts an {@code int[][]} minefield into a {@code char[][]}
-     * version. Digits are preserved as characters, {@link #INT_MINE}
-     * entries are converted to {@link #MINE}.
+     * version. Digits are preserved as characters, {@link #MINE}
+     * entries are outright copied.
      *
      * @param minefield an {@code int[][]} array representing a
      *                  minesweeper board.
@@ -128,7 +142,7 @@ public class Minefield {
         char[][] result = new char[minefield.length][minefield[0].length];
         for (int i = 0; i < minefield.length; i++) {
             for (int j = 0; j < minefield[0].length; j++) {
-                if (minefield[i][j] == INT_MINE) result[i][j] = MINE;
+                if (minefield[i][j] == MINE) result[i][j] = MINE;
                 else result[i][j] = (char) (minefield[i][j] + '0');
             }
         }
@@ -146,10 +160,10 @@ public class Minefield {
      *         in the cell.
      */
     public char getCell(int x, int y) {
-        if (x < 0 || y < 0 || x >= this.cells.length || y >= this.cells[0].length) {
+        if (x < 0 || y < 0 || x >= cells.length || y >= cells[0].length) {
             return '\0';
         } else {
-            return this.cells[x][y];
+            return cells[x][y];
         }
     }
 
@@ -158,6 +172,6 @@ public class Minefield {
         for (char[] rowOfCells : cells) {
             System.out.println(Arrays.toString(rowOfCells));
         }
-
     }
+
 }
