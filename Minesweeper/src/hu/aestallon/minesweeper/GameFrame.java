@@ -1,7 +1,6 @@
 package hu.aestallon.minesweeper;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class GameFrame extends JFrame {
     public static final int CELL_SIZE = 40;
@@ -20,28 +19,30 @@ public class GameFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(335, 80);
         this.setLayout(null);
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        JButton newGameSmallButton = new JButton("Small");
-        newGameSmallButton.setSize(80, 40);
-        newGameSmallButton.setLocation(0, 0);
-        newGameSmallButton.setBackground(new Color(255, 230, 138));
-        newGameSmallButton.addActionListener(e -> createNewGame(SMALL, SMALL_MINE_COUNT));
+        JMenuBar menuBar = new JMenuBar();
 
-        JButton newGameMediumButton = new JButton("Medium");
-        newGameMediumButton.setSize(80, 40);
-        newGameMediumButton.setLocation(80, 0);
-        newGameMediumButton.setBackground(new Color(255, 208, 138));
-        newGameMediumButton.addActionListener(e -> createNewGame(MEDIUM, MEDIUM_MINE_COUNT));
+        JMenu newGameMenu = new JMenu("New Game");
+        menuBar.add(newGameMenu);
 
-        JButton newGameLargeButton = new JButton("Large");
-        newGameLargeButton.setSize(80, 40);
-        newGameLargeButton.setLocation(160, 0);
-        newGameLargeButton.setBackground(new Color(255, 183, 138));
-        newGameLargeButton.addActionListener(e -> createNewGame(LARGE, LARGE_MINE_COUNT));
+        JMenuItem smallGame = new JMenuItem("Small");
+        smallGame.addActionListener(e -> createNewGame(SMALL, SMALL_MINE_COUNT));
+        newGameMenu.add(smallGame);
 
-        this.add(newGameSmallButton);
-        this.add(newGameMediumButton);
-        this.add(newGameLargeButton);
+        JMenuItem mediumGame= new JMenuItem("Medium");
+        mediumGame.addActionListener(e -> createNewGame(MEDIUM, MEDIUM_MINE_COUNT));
+        newGameMenu.add(mediumGame);
+
+        JMenuItem largeGame = new JMenuItem("Large");
+        mediumGame.addActionListener(e -> createNewGame(LARGE, LARGE_MINE_COUNT));
+        newGameMenu.add(largeGame);
+
+        this.setJMenuBar(menuBar);
 
         this.setResizable(false);
         this.setTitle("Home-Cooked Minesweeper");
@@ -67,9 +68,9 @@ public class GameFrame extends JFrame {
         if (gamePanel != null) remove(gamePanel);
         gamePanel = new GamePanel(gameSize, mineCount);
         gamePanel.setSize(gameSize * CELL_SIZE, gameSize * CELL_SIZE);
-        gamePanel.setLocation(0, 41);
+        gamePanel.setLocation(0, 0);
         this.setSize(gamePanel.getWidth() + 15, gamePanel.getHeight() + 80);
         this.add(gamePanel);
-        SwingUtilities.updateComponentTreeUI(this);
+//        SwingUtilities.updateComponentTreeUI(this);
     }
 }
