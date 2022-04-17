@@ -42,7 +42,7 @@ public class CellButton extends JButton {
         this.setContentAreaFilled(false);
         this.setFocusable(false);
         this.setPreferredSize(new Dimension(GameFrame.CELL_SIZE, GameFrame.CELL_SIZE));
-        this.setCellButtonImage("defaultImage");
+        this.setAppearance("defaultImage");
     }
 
     /**
@@ -54,26 +54,28 @@ public class CellButton extends JButton {
      */
     public void setSus(boolean input) {
         this.isSus = input;
-        if (input) setCellButtonImage("suspected");
-        else setCellButtonImage("defaultImage");
+        if (input) setAppearance("suspected");
+        else setAppearance("defaultImage");
     }
 
     /**
-     * Flags the instance as "uncovered by the user", and changes its
-     * appearance according to the value stored in it.
+     * Flags the instance as passive and changes its
+     * appearance according to the value stored therein.
      *
      * <p>The instance will be marked non-interactive, and as such
      * interacting with it should not yield any results.
      */
-    public void setUncovered() {
+    public void reveal() {
         setPassive();
-        setCellButtonImage(String.valueOf(value));
+        setAppearance(String.valueOf(value));
     }
 
     /**
      * Flags the instance passive without changing its appearance.
      *
-     * <p>The purpose of this is to make the instance non-interactive.
+     * <p>The purpose of this is to make the instance
+     * non-interactive after it has been revealed, or after the
+     * game has ended.
      */
     public void setPassive() {
         interactive = false;
@@ -87,7 +89,7 @@ public class CellButton extends JButton {
      *                 of the installation directory. The file extension
      *                 {@code ".png"} is automatically appended.
      */
-    private void setCellButtonImage(String filename) {
+    private void setAppearance(String filename) {
         ImageIcon image = new ImageIcon(USER_DIR + FS + "graphics" + FS + filename + ".png");
         this.setIcon(image);
     }

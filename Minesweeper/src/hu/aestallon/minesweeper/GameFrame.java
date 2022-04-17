@@ -39,28 +39,9 @@ public class GameFrame extends JFrame {
         newGameLargeButton.setBackground(new Color(255, 183, 138));
         newGameLargeButton.addActionListener(e -> createNewGame(LARGE, LARGE_MINE_COUNT));
 
-        JButton submitButton = new JButton("Submit");
-        submitButton.setSize(80, 40);
-        submitButton.setLocation(240, 0);
-        submitButton.setBackground(Color.GREEN);
-        submitButton.addActionListener(e -> {
-            long foundMines= gamePanel.getCellButtons().stream()
-                    .filter(cb -> cb.isSus() && cb.isMine())
-                    .count();
-            long mineCount = gamePanel.getCellButtons().stream()
-                    .filter(CellButton::isMine)
-                    .count();
-
-            if (foundMines == mineCount) {
-                gamePanel.getCellButtons().forEach(CellButton::setPassive);
-                JOptionPane.showMessageDialog(null, "Gratulálunk nyertél!!!!");
-            }
-        });
-
         this.add(newGameSmallButton);
         this.add(newGameMediumButton);
         this.add(newGameLargeButton);
-        this.add(submitButton);
 
         this.setResizable(false);
         this.setTitle("Home-Cooked Minesweeper");
