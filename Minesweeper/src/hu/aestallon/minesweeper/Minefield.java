@@ -112,7 +112,7 @@ public class Minefield {
     /**
      * @param arr an {@code int[][]} array to be modified
      * @param r   the {@code int} row of a given entry
-     * @param c   the {@code int} coloumn of a given entry
+     * @param c   the {@code int} column of a given entry
      */
     private static void incrementNotMineNeighbours(int[][] arr, int r, int c) {
         final int[] dirs = {-1, 0, 1};
