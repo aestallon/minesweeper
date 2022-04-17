@@ -110,11 +110,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
      */
     /*
      * The game is considered "won", if all cells that are not
-     * hiding a mine are either revealed (their 'interactive'
-     * attribute is false) or not revealed but not suspected
-     * either. This state means that every mine cell is either
-     * untouched or marked as suspected - and no safe cell is
-     * marked as suspected either.
+     * hiding a mine are revealed (their 'interactive' field
+     * is false). This state means that every mine cell is
+     * either untouched or marked as suspected - and no safe
+     * cell is marked as suspected either.
      *
      * Thus, we can count the cells for which it is true that:
      *     1) they are not hiding mines, and
