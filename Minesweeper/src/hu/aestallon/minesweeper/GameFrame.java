@@ -31,15 +31,15 @@ public class GameFrame extends JFrame {
         menuBar.add(newGameMenu);
 
         JMenuItem smallGame = new JMenuItem("Small");
-        smallGame.addActionListener(e -> createNewGame(SMALL, SMALL_MINE_COUNT));
+        smallGame.addActionListener(e -> createNewGame(SMALL, SMALL, SMALL_MINE_COUNT));
         newGameMenu.add(smallGame);
 
-        JMenuItem mediumGame= new JMenuItem("Medium");
-        mediumGame.addActionListener(e -> createNewGame(MEDIUM, MEDIUM_MINE_COUNT));
+        JMenuItem mediumGame = new JMenuItem("Medium");
+        mediumGame.addActionListener(e -> createNewGame(MEDIUM, MEDIUM, MEDIUM_MINE_COUNT));
         newGameMenu.add(mediumGame);
 
         JMenuItem largeGame = new JMenuItem("Large");
-        mediumGame.addActionListener(e -> createNewGame(LARGE, LARGE_MINE_COUNT));
+        mediumGame.addActionListener(e -> createNewGame(LARGE, MEDIUM, LARGE_MINE_COUNT));
         newGameMenu.add(largeGame);
 
         this.setJMenuBar(menuBar);
@@ -60,14 +60,16 @@ public class GameFrame extends JFrame {
      * instance is refreshed to let the user see and interact with the
      * changes.
      *
-     * @param gameSize  The size of the game's minefield.
-     *                  <i>(Both horizontal and vertical)</i>
+     * @param gameRows  The {@code int} number of rows in the game's
+     *                  board
+     * @param gameCols  The {@code int} number of columns in the game's
+     *                  board
      * @param mineCount The number of mines present in the game.
      */
-    private void createNewGame(int gameSize, int mineCount) {
+    private void createNewGame(int gameRows, int gameCols, int mineCount) {
         if (gamePanel != null) remove(gamePanel);
-        gamePanel = new GamePanel(gameSize, mineCount);
-        gamePanel.setSize(gameSize * CELL_SIZE, gameSize * CELL_SIZE);
+        gamePanel = new GamePanel(gameRows, gameCols, mineCount);
+        gamePanel.setSize(gameCols * CELL_SIZE, gameRows * CELL_SIZE);
         gamePanel.setLocation(0, 0);
         this.setSize(gamePanel.getWidth() + 15, gamePanel.getHeight() + 80);
         this.add(gamePanel);
