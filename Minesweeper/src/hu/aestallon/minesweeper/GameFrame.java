@@ -2,6 +2,7 @@ package hu.aestallon.minesweeper;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class GameFrame extends JFrame {
 
@@ -17,6 +18,9 @@ public class GameFrame extends JFrame {
     private static final int LARGE_MINE_COUNT = 55;
 
     private GamePanel gamePanel;
+    private int gameRows;
+    private int gameCols;
+    private int mineCount;
 
     public GameFrame() {
         /* <--- EXIT, SIZE & LAYOUT ---> */
@@ -33,29 +37,56 @@ public class GameFrame extends JFrame {
         /* <-------- MENU BAR --------> */
         JMenuBar menuBar = new JMenuBar();
 
-        // Menu Bar - New Game Menu
-        JMenu newGameMenu = new JMenu("New Game");
-        menuBar.add(newGameMenu);
+        // Settings Menu
+        JMenu settingsMenu = new JMenu("Settings");
+        ButtonGroup settingsGroup = new ButtonGroup();
 
-        JMenuItem smallGame = new JMenuItem("Small");
-        smallGame.addActionListener(e -> createNewGame(SMALL, SMALL, SMALL_MINE_COUNT));
-        newGameMenu.add(smallGame);
+        JMenuItem smallGame = new JRadioButtonMenuItem("Small");
+        smallGame.addActionListener(e -> setGameParameters(SMALL, SMALL, SMALL_MINE_COUNT));
+        settingsGroup.add(smallGame);
+        settingsMenu.add(smallGame);
 
-        JMenuItem mediumGame = new JMenuItem("Medium");
-        mediumGame.addActionListener(e -> createNewGame(MEDIUM, MEDIUM, MEDIUM_MINE_COUNT));
-        newGameMenu.add(mediumGame);
+        JMenuItem mediumGame = new JRadioButtonMenuItem("Medium");
+        mediumGame.addActionListener(e -> setGameParameters(MEDIUM, MEDIUM, MEDIUM_MINE_COUNT));
+        settingsGroup.add(mediumGame);
+        settingsMenu.add(mediumGame);
 
-        JMenuItem largeGame = new JMenuItem("Large");
-        largeGame.addActionListener(e -> createNewGame(LARGE, LARGE, LARGE_MINE_COUNT));
-        newGameMenu.add(largeGame);
+        JMenuItem largeGame = new JRadioButtonMenuItem("Large");
+        largeGame.addActionListener(e -> setGameParameters(LARGE, LARGE, LARGE_MINE_COUNT));
+        settingsGroup.add(largeGame);
+        settingsMenu.add(largeGame);
 
-        newGameMenu.add(new JToolBar.Separator());
-
-        JMenuItem customGame = new JMenuItem("Custom...");
+        JMenuItem customGame = new JRadioButtonMenuItem("Custom...");
         customGame.addActionListener(e ->
                 new CustomGameDialogueFrame(this)
         );
-        newGameMenu.add(customGame);
+        settingsGroup.add(customGame);
+        settingsMenu.add(customGame);
+
+        menuBar.add(settingsMenu);
+
+        // Help Menu
+        JMenu helpMenu = new JMenu("Help");
+
+        JMenuItem howToPlay = new JMenuItem("How to Play");
+        howToPlay.addActionListener(e -> new InfoFrame(this, InfoFrame.ContentType.HOW_TO_PLAY));
+        helpMenu.add(howToPlay);
+
+        JMenuItem about = new JMenuItem("About");
+        about.addActionListener(e -> new InfoFrame(this, InfoFrame.ContentType.ABOUT));
+        helpMenu.add(about);
+
+        menuBar.add(helpMenu);
+
+        // New Game Button
+        JButton newGameButton = new JButton("New Game");
+        newGameButton.setFocusable(false);
+        newGameButton.addActionListener(e -> {
+            if (gameRows != 0) createNewGame(gameRows, gameCols, mineCount);
+        });
+        menuBar.add(Box.createHorizontalGlue());    // force the button to be on the right side.
+
+        menuBar.add(newGameButton);
 
         this.setJMenuBar(menuBar);
         /* <------ MENU BAR end ------> */
@@ -67,6 +98,12 @@ public class GameFrame extends JFrame {
         this.setVisible(true);
         /* <-------- MISC end --------> */
 
+    }
+
+    private void setGameParameters(int gameRows, int gameCols, int mineCount) {
+        this.gameRows = gameRows;
+        this.gameCols = gameCols;
+        this.mineCount = mineCount;
     }
 
     /**
@@ -89,16 +126,18 @@ public class GameFrame extends JFrame {
         gamePanel = new GamePanel(gameRows, gameCols, mineCount);
         gamePanel.setSize(gameCols * CELL_SIZE, gameRows * CELL_SIZE);
         gamePanel.setLocation(0, 0);
-        this.setSize(gamePanel.getWidth() + 15, gamePanel.getHeight() + 80);
+        this.setSize(gamePanel.getWidth() + 15, gamePanel.getHeight() + 65);
         this.add(gamePanel);
         SwingUtilities.updateComponentTreeUI(this);
     }
 
-
+    /**
+     * Ώριστε, Τζαύαντοκ στα ελληνικά!
+     */
     private static class CustomGameDialogueFrame extends JFrame {
 
         private CustomGameDialogueFrame(GameFrame gameFrame) {
-            this.setUndecorated(true);
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             this.setSize(220, 200);
 
             JLabel rowLabel = new JLabel("Number of rows:");
@@ -152,13 +191,69 @@ public class GameFrame extends JFrame {
                 if (mineCount > rows * cols) {
                     throw new IllegalArgumentException("Number of mines is too large!");
                 }
-                gameFrame.createNewGame(rows, cols, mineCount);
+                gameFrame.setGameParameters(rows, cols, mineCount);
                 this.dispose();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Please provide numbers!");
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             }
+        }
+    }
+
+    private static class InfoFrame extends JFrame {
+
+        private static final String howToPlayText = """
+                <html>
+                <b><font size=+2>How to Play</font></b>
+                
+                <p><font size=+1>Start a game</font>
+                
+                <p>Click on the "Settings" menu and select the desired difficulty.<br>
+                If you want to play with a custom board, select "Custom..." and<br>
+                specify the board to your liking.<br>
+                
+                <p>Once a difficulty is selected, click on the "New Game" button<br>
+                to start a new game.
+                
+                <p><font size=+1>Playing the game</font>
+                
+                <p>Left-clicking any cell will reveal what lies hidden under it.<br>
+                If you left-click on any cell which contained a mine, you lose!<br>
+                Cells that instead contain a number tell you how many neighbouring<br>
+                cells are mines. Use this information to carefully avoid any mines.<br>
+                Once you revealed every safe cell, you win the game!
+                
+                <p>Right-clicking any cell will mark it as "suspected". Suspected<br>
+                mines cannot be left-clicked, so you can prevent yourself clicking<br>
+                on a mine by mistake! Right-clicking a suspected mine again will<br>
+                remove this restriction.
+                </html>""";
+
+        private static final String aboutText = """
+                <html>
+                <i>Lorem ipsum once again<i>
+                </html>""";
+
+        private enum ContentType {
+            HOW_TO_PLAY(howToPlayText),
+            ABOUT(aboutText);
+
+            final String text;
+            ContentType(String text) {
+                this.text = text;
+            }
+        }
+
+        private InfoFrame(GameFrame gameFrame, ContentType contentType) {
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+            JLabel info = new JLabel(contentType.text);
+            this.add(info);
+
+            this.pack();
+            this.setLocationRelativeTo(gameFrame);
+            this.setVisible(true);
         }
     }
 }
