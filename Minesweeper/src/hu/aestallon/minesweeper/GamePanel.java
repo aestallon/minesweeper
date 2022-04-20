@@ -27,6 +27,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
      */
     public GamePanel(int rows, int cols, int mineCount) {
         cellButtons = new ArrayList<>();
+
         Minefield minefield = new Minefield(rows, cols, mineCount);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -123,11 +124,11 @@ public class GamePanel extends JPanel implements MouseInputListener {
      * be considered won.
      */
     private boolean isVictory() {
-        long coveredNonMines = cellButtons.stream()
+        long untouchedSafeCells = cellButtons.stream()
                 .filter(cb -> !cb.isMine())
                 .filter(CellButton::isInteractive)
                 .count();
-        return coveredNonMines == 0;
+        return untouchedSafeCells == 0;
     }
 
     @Override
