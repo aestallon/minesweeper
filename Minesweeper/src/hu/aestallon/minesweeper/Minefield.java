@@ -47,9 +47,10 @@ public class Minefield {
      * these are spread in a pseudorandom manner. All other entries contain
      * the number of neighbouring mine cells.
      *
-     * @param size      {@code int} specifying the size of the minefield.
+     * @param rows      {@code int} number of rows of the board
+     * @param cols      {@code int} number of columns of the board
      * @param mineCount {@code int} specifying the number of randomly placed
-     *                  mines int the minefield.
+     *                  mines in the board.
      * @return a {@code char[][]} array containing the "solved" cells of a
      *         minefield.
      */
