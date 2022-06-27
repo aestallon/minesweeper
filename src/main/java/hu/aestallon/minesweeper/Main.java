@@ -2,16 +2,14 @@ package hu.aestallon.minesweeper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class Main {
     public static final Map<String, BufferedImage> sprites = new HashMap<>();
 
-    private static final String FS = File.separator;
-    private static final String USER_DIR = System.getProperty("user.dir");
     private static final String[] SPRITE_NAMES =
             {"0", "1", "2", "3", "4", "5", "6", "7", "8", "x", "defaultImage", "suspected"};
 
@@ -33,10 +31,14 @@ public final class Main {
      * @throws IOException if at least one file is missing.
      */
     private static void loadSprites() throws IOException {
-        for (String filename : SPRITE_NAMES) {
-            File file = new File(USER_DIR + FS + "graphics" + FS + filename + ".png");
-            BufferedImage bufferedImage = ImageIO.read(file);
-            sprites.put(filename, bufferedImage);
+        for (String spriteName : SPRITE_NAMES) {
+            InputStream inputStream = Main.class
+                    .getResourceAsStream("/graphics/" + spriteName + ".png");
+            if (inputStream == null) {
+                throw new IllegalArgumentException("The provided sprite name (" + spriteName + ") is invalid!");
+            }
+            BufferedImage bufferedImage = ImageIO.read(inputStream);
+            sprites.put(spriteName, bufferedImage);
         }
     }
 
