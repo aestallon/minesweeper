@@ -53,6 +53,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
             if (button.isMine()) {
                 cellButtons.forEach(CellButton::setPassive);
                 JOptionPane.showMessageDialog(null, "Sajnos vesztettél :(");
+                cellButtons.stream().filter(CellButton::isMine).forEach(CellButton::reveal);
             } else {
                 if (button.getValue() == '0') autoRevealZeros(button);
                 if (isVictory()) {
@@ -130,6 +131,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
                 .count();
         return untouchedSafeCells == 0;
     }
+
+    //--------------------------------------------------------------------------
+    // These methods are unused, but due to the nature of interfaces they must
+    // be overridden:
 
     @Override
     public void mouseClicked(MouseEvent event) {
