@@ -7,13 +7,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Main {
+public final class Main {
     public static final Map<String, BufferedImage> sprites = new HashMap<>();
 
-    private static final String FS = System.getProperty("file.separator");
+    private static final String FS = File.separator;
     private static final String USER_DIR = System.getProperty("user.dir");
     private static final String[] SPRITE_NAMES =
             {"0", "1", "2", "3", "4", "5", "6", "7", "8", "x", "defaultImage", "suspected"};
+
+    private Main() {}
 
     public static void main(String[] args) {
         try {
