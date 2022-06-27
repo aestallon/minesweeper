@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Provides objects representing the values of a Minesweeper board.
  *
- * <p>The {@link #Minefield(int, int)} constructor can be called to
+ * <p>The {@link #Minefield(int, int, int)} constructor can be called to
  * generate a pseudorandom board. Individual cell values can be
  * accessed with the {@link #getCell(int, int)} method. These values
  * are returned as {@code char}s, and can be interpreted as follows:
@@ -31,13 +31,13 @@ public class Minefield {
      * Constructs a fully solved, pseudorandom Minesweeper
      * board with the provided size and mine count.
      *
-     * @param size      the {@code int} width and height of
-     *                  the board
+     * @param rows      the {@code int} number of rows in the board
+     * @param cols      the {@code int} number of columns in the board
      * @param mineCount the {@code int} number of mines to
      *                  be placed in the board.
      */
-    public Minefield(int size, int mineCount) {
-        cells = createMinefield(size, mineCount);
+    public Minefield(int rows, int cols, int mineCount) {
+        cells = createMinefield(rows, cols, mineCount);
     }
 
     /**
@@ -47,14 +47,15 @@ public class Minefield {
      * these are spread in a pseudorandom manner. All other entries contain
      * the number of neighbouring mine cells.
      *
-     * @param size      {@code int} specifying the size of the minefield.
+     * @param rows      {@code int} number of rows of the board
+     * @param cols      {@code int} number of columns of the board
      * @param mineCount {@code int} specifying the number of randomly placed
-     *                  mines int the minefield.
+     *                  mines in the board.
      * @return a {@code char[][]} array containing the "solved" cells of a
      *         minefield.
      */
-    private static char[][] createMinefield(int size, int mineCount) {
-        int[][] intMinefield = new int[size][size];
+    private static char[][] createMinefield(int rows, int cols, int mineCount) {
+        int[][] intMinefield = new int[rows][cols];
         fillWithMines(intMinefield, mineCount);
         fillWithNumbers(intMinefield);
         return convertToCharArray(intMinefield);
@@ -78,7 +79,7 @@ public class Minefield {
     private static void fillWithMines(int[][] minefield, int mineCount) {
         for (int i = 0; i < mineCount; i++) {
             int x = ThreadLocalRandom.current().nextInt(minefield.length);
-            int y = ThreadLocalRandom.current().nextInt(minefield.length);
+            int y = ThreadLocalRandom.current().nextInt(minefield[0].length);
 
             if (minefield[x][y] != MINE) minefield[x][y] = MINE;
             else i--;
@@ -101,7 +102,7 @@ public class Minefield {
      */
     private static void fillWithNumbers(int[][] minefield) {
         for (int i = 0; i < minefield.length; i++) {
-            for (int j = 0; j < minefield.length; j++) {
+            for (int j = 0; j < minefield[0].length; j++) {
                 if (minefield[i][j] == MINE) {
                     incrementNotMineNeighbours(minefield, i, j);
                 }
@@ -119,7 +120,7 @@ public class Minefield {
         for (int dirR : dirs) {
             for (int dirC : dirs) {
                 if ((r + dirR >= 0 && r + dirR < arr.length) &&
-                        (c + dirC >= 0 && c + dirC < arr.length) &&
+                        (c + dirC >= 0 && c + dirC < arr[0].length) &&
                         (arr[r + dirR][c + dirC] != MINE) &&
                         !(dirR == 0 && dirC == 0)
                 ) {

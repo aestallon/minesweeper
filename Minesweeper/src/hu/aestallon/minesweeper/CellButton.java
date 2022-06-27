@@ -1,11 +1,7 @@
 package hu.aestallon.minesweeper;
 
-
 import javax.swing.*;
 import java.awt.*;
-
-import static hu.aestallon.minesweeper.Main.FS;
-import static hu.aestallon.minesweeper.Main.USER_DIR;
 
 /**
  * An extended {@link JButton} serving as an interactive cell for a
@@ -90,8 +86,11 @@ public class CellButton extends JButton {
      *                 {@code ".png"} is automatically appended.
      */
     private void setAppearance(String filename) {
-        ImageIcon image = new ImageIcon(USER_DIR + FS + "graphics" + FS + filename + ".png");
-        this.setIcon(image);
+        Image image = Main.sprites
+                .get(filename)
+                .getScaledInstance(GameFrame.CELL_SIZE, GameFrame.CELL_SIZE, Image.SCALE_DEFAULT);
+        ImageIcon icon = new ImageIcon(image);
+        this.setIcon(icon);
     }
 
     /**

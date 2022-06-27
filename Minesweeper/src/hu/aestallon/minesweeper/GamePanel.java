@@ -18,24 +18,26 @@ public class GamePanel extends JPanel implements MouseInputListener {
     private final List<CellButton> cellButtons;
 
     /**
-     * Constructs an instance with the given size (both height and width)
-     * and number of mines.
+     * Constructs an instance with the given rows and columns and
+     * number of mines.
      *
-     * @param size      the {@code int} height and width of the board
+     * @param rows      the {@code int} number of rows of the board
+     * @param cols      the {@code int} number of columns of the board
      * @param mineCount the {@code int} number of mines in the board
      */
-    public GamePanel(int size, int mineCount) {
+    public GamePanel(int rows, int cols, int mineCount) {
         cellButtons = new ArrayList<>();
-        Minefield minefield = new Minefield(size, mineCount);
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+
+        Minefield minefield = new Minefield(rows, cols, mineCount);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 CellButton cellButton = new CellButton(i, j, minefield.getCell(i, j));
                 this.add(cellButton);
                 cellButtons.add(cellButton);
                 cellButton.addMouseListener(this);
             }
         }
-        this.setLayout(new GridLayout(size, size, 0, 0));
+        this.setLayout(new GridLayout(rows, cols, 0, 0));
         this.setVisible(true);
     }
 
@@ -51,6 +53,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
             if (button.isMine()) {
                 cellButtons.forEach(CellButton::setPassive);
                 JOptionPane.showMessageDialog(null, "Sajnos vesztettél :(");
+                cellButtons.stream().filter(CellButton::isMine).forEach(CellButton::reveal);
             } else {
                 if (button.getValue() == '0') autoRevealZeros(button);
                 if (isVictory()) {
@@ -122,12 +125,16 @@ public class GamePanel extends JPanel implements MouseInputListener {
      * be considered won.
      */
     private boolean isVictory() {
-        long coveredNonMines = cellButtons.stream()
+        long untouchedSafeCells = cellButtons.stream()
                 .filter(cb -> !cb.isMine())
                 .filter(CellButton::isInteractive)
                 .count();
-        return coveredNonMines == 0;
+        return untouchedSafeCells == 0;
     }
+
+    //--------------------------------------------------------------------------
+    // These methods are unused, but due to the nature of interfaces they must
+    // be overridden:
 
     @Override
     public void mouseClicked(MouseEvent event) {
