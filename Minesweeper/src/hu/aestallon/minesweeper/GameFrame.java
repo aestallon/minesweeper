@@ -2,7 +2,6 @@ package hu.aestallon.minesweeper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public class GameFrame extends JFrame {
 
@@ -131,9 +130,6 @@ public class GameFrame extends JFrame {
         SwingUtilities.updateComponentTreeUI(this);
     }
 
-    /**
-     * Ώριστε, Τζαύαντοκ στα ελληνικά!
-     */
     private static class CustomGameDialogueFrame extends JFrame {
 
         private CustomGameDialogueFrame(GameFrame gameFrame) {
