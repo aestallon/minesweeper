@@ -162,13 +162,17 @@ public class Minefield {
      */
     public char getCell(int x, int y) {
         if (x < 0 || y < 0 || x >= cells.length || y >= cells[0].length) {
-            return '\0';
+            throw new ArrayIndexOutOfBoundsException(String.format(
+                    "Index [%d, %d] is out of bounds for minefield of size %dx%d!",
+                    x, y, cells.length, cells[0].length
+            ));
         } else {
             return cells[x][y];
         }
     }
 
     /** Prints the minefield's solution to standard output. */
+    @SuppressWarnings("unused")
     public void print() {
         for (char[] rowOfCells : cells) {
             System.out.println(Arrays.toString(rowOfCells));
