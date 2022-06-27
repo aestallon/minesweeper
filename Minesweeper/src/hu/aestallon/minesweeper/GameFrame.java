@@ -21,8 +21,20 @@ public class GameFrame extends JFrame {
     private int gameCols;
     private int mineCount;
 
+    private JButton newGameButton;
+
     public GameFrame() {
-        /* <--- EXIT, SIZE & LAYOUT ---> */
+        initAppearance();
+        initMenuBar();
+
+        // Misc finalisation
+        this.setResizable(false);
+        this.setTitle("Home-Cooked Minesweeper");
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
+    }
+
+    private void initAppearance() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -31,9 +43,9 @@ public class GameFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(335, 80);
         this.setLayout(null);
-        /* <- EXIT, SIZE & LAYOUT end -> */
+    }
 
-        /* <-------- MENU BAR --------> */
+    private void initMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
         // Settings Menu
@@ -41,17 +53,26 @@ public class GameFrame extends JFrame {
         ButtonGroup settingsGroup = new ButtonGroup();
 
         JMenuItem smallGame = new JRadioButtonMenuItem("Small");
-        smallGame.addActionListener(e -> setGameParameters(SMALL, SMALL, SMALL_MINE_COUNT));
+        smallGame.addActionListener(e -> {
+            setGameParameters(SMALL, SMALL, SMALL_MINE_COUNT);
+            newGameButton.setEnabled(true);
+        });
         settingsGroup.add(smallGame);
         settingsMenu.add(smallGame);
 
         JMenuItem mediumGame = new JRadioButtonMenuItem("Medium");
-        mediumGame.addActionListener(e -> setGameParameters(MEDIUM, MEDIUM, MEDIUM_MINE_COUNT));
+        mediumGame.addActionListener(e -> {
+            setGameParameters(MEDIUM, MEDIUM, MEDIUM_MINE_COUNT);
+            newGameButton.setEnabled(true);
+        });
         settingsGroup.add(mediumGame);
         settingsMenu.add(mediumGame);
 
         JMenuItem largeGame = new JRadioButtonMenuItem("Large");
-        largeGame.addActionListener(e -> setGameParameters(LARGE, LARGE, LARGE_MINE_COUNT));
+        largeGame.addActionListener(e -> {
+            setGameParameters(LARGE, LARGE, LARGE_MINE_COUNT);
+            newGameButton.setEnabled(true);
+        });
         settingsGroup.add(largeGame);
         settingsMenu.add(largeGame);
 
@@ -78,8 +99,9 @@ public class GameFrame extends JFrame {
         menuBar.add(helpMenu);
 
         // New Game Button
-        JButton newGameButton = new JButton("New Game");
+        newGameButton = new JButton("New Game");
         newGameButton.setFocusable(false);
+        newGameButton.setEnabled(false);            // any valid game setup enables this
         newGameButton.addActionListener(e -> {
             if (gameRows != 0) createNewGame(gameRows, gameCols, mineCount);
         });
@@ -88,15 +110,6 @@ public class GameFrame extends JFrame {
         menuBar.add(newGameButton);
 
         this.setJMenuBar(menuBar);
-        /* <------ MENU BAR end ------> */
-
-        /* <---------- MISC ----------> */
-        this.setResizable(false);
-        this.setTitle("Home-Cooked Minesweeper");
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        /* <-------- MISC end --------> */
-
     }
 
     private void setGameParameters(int gameRows, int gameCols, int mineCount) {
@@ -189,6 +202,7 @@ public class GameFrame extends JFrame {
                 }
                 gameFrame.setGameParameters(rows, cols, mineCount);
                 this.dispose();
+                gameFrame.newGameButton.setEnabled(true);
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Please provide numbers!");
             } catch (IllegalArgumentException ex) {
