@@ -1,5 +1,9 @@
 package hu.aestallon.minesweeper;
 
+import hu.aestallon.minesweeper.game.GamePanel;
+import hu.aestallon.minesweeper.scores.DatabaseHandler;
+import hu.aestallon.minesweeper.scores.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,18 +20,27 @@ public class GameFrame extends JFrame {
     private static final int MEDIUM_MINE_COUNT = 10;
     private static final int LARGE_MINE_COUNT = 55;
 
+    private static final DatabaseHandler db;
+
+    static {
+        db = DatabaseHandler.getInstance();
+        db.initDatabase();
+    }
+
     private GamePanel gamePanel;
     private int gameRows;
     private int gameCols;
     private int mineCount;
+    private Player player;
 
     private JButton newGameButton;
 
     public GameFrame() {
+        player = new Player("guest", db);
         initAppearance();
         initMenuBar();
 
-        // Misc finalisation
+        // Misc setup
         this.setResizable(false);
         this.setTitle("Home-Cooked Minesweeper");
         this.setLocationRelativeTo(null);
@@ -78,7 +91,7 @@ public class GameFrame extends JFrame {
 
         JMenuItem customGame = new JRadioButtonMenuItem("Custom...");
         customGame.addActionListener(e ->
-                new CustomGameDialogueFrame(this)
+                new CustomGameDialog(this)
         );
         settingsGroup.add(customGame);
         settingsMenu.add(customGame);
@@ -98,12 +111,25 @@ public class GameFrame extends JFrame {
 
         menuBar.add(helpMenu);
 
+        // Scores Menu
+        JMenu scoreMenu = new JMenu("Scores");
+
+        JMenuItem highScores = new JMenuItem("High Scores");
+        highScores.addActionListener(e -> new HighScoreFrame(this));
+        scoreMenu.add(highScores);
+
+        JMenuItem changeName = new JMenuItem("Change name...");
+        changeName.addActionListener(e -> new PlayerChangeDialog(this));
+        scoreMenu.add(changeName);
+
+        menuBar.add(scoreMenu);
+
         // New Game Button
         newGameButton = new JButton("New Game");
         newGameButton.setFocusable(false);
         newGameButton.setEnabled(false);            // any valid game setup enables this
         newGameButton.addActionListener(e -> {
-            if (gameRows != 0) createNewGame(gameRows, gameCols, mineCount);
+            if (gameRows != 0) createNewGame(player, gameRows, gameCols, mineCount);
         });
         menuBar.add(Box.createHorizontalGlue());    // force the button to be on the right side.
 
@@ -133,9 +159,9 @@ public class GameFrame extends JFrame {
      *                  board
      * @param mineCount The number of mines present in the game.
      */
-    private void createNewGame(int gameRows, int gameCols, int mineCount) {
+    private void createNewGame(Player player, int gameRows, int gameCols, int mineCount) {
         if (gamePanel != null) remove(gamePanel);
-        gamePanel = new GamePanel(gameRows, gameCols, mineCount);
+        gamePanel = new GamePanel(player, gameRows, gameCols, mineCount);
         gamePanel.setSize(gameCols * CELL_SIZE, gameRows * CELL_SIZE);
         gamePanel.setLocation(0, 0);
         this.setSize(gamePanel.getWidth() + 15, gamePanel.getHeight() + 65);
@@ -143,9 +169,9 @@ public class GameFrame extends JFrame {
         SwingUtilities.updateComponentTreeUI(this);
     }
 
-    private static class CustomGameDialogueFrame extends JFrame {
+    private static class CustomGameDialog extends JFrame {
 
-        private CustomGameDialogueFrame(GameFrame gameFrame) {
+        private CustomGameDialog(GameFrame gameFrame) {
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             this.setSize(220, 200);
 
@@ -215,9 +241,9 @@ public class GameFrame extends JFrame {
 
         private static final String howToPlayText = """
                 <html>
-                <b><font size=+2>How to Play</font></b>
+                <h1>How to Play</font></h1>
                 
-                <p><font size=+1>Start a game</font>
+                <h2>Start a game</h2>
                 
                 <p>Click on the "Settings" menu and select the desired difficulty.<br>
                 If you want to play with a custom board, select "Custom..." and<br>
@@ -226,7 +252,7 @@ public class GameFrame extends JFrame {
                 <p>Once a difficulty is selected, click on the "New Game" button<br>
                 to start a new game.
                 
-                <p><font size=+1>Playing the game</font>
+                <h2>Playing the game<h2>
                 
                 <p>Left-clicking any cell will reveal what lies hidden under it.<br>
                 If you left-click on any cell which contained a mine, you lose!<br>
@@ -260,6 +286,63 @@ public class GameFrame extends JFrame {
 
             JLabel info = new JLabel(contentType.text);
             this.add(info);
+
+            this.pack();
+            this.setLocationRelativeTo(gameFrame);
+            this.setVisible(true);
+        }
+    }
+
+    private static class HighScoreFrame extends JFrame {
+        private HighScoreFrame(GameFrame gameFrame) {
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            this.setTitle("High Scores");
+            this.setLayout(new GridLayout(11, 2));
+
+            JLabel playerHeader = new JLabel("Player");
+            this.add(playerHeader);
+
+            JLabel scoreHeader = new JLabel("Score");
+            this.add(scoreHeader);
+
+            db.getTopTenScores().forEach(score -> {
+                JLabel player = new JLabel(score.name());
+                this.add(player);
+                JLabel highScore = new JLabel(String.valueOf(score.score()));
+                this.add(highScore);
+            });
+
+            this.pack();
+            this.setLocationRelativeTo(gameFrame);
+            this.setVisible(true);
+        }
+    }
+
+    private static class PlayerChangeDialog extends JFrame {
+        private PlayerChangeDialog(GameFrame gameFrame) {
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            this.setTitle("High Scores");
+            this.setLayout(new GridLayout(2, 2));
+
+            this.add(new JLabel("Enter your name:"));
+            JTextField textField = new JTextField(20);
+            this.add(textField);
+
+            JButton okButton = new JButton("OK");
+            okButton.addActionListener(e -> {
+                String input = textField.getText();
+                if (input.isEmpty() || input.isBlank()) {
+                    JOptionPane.showMessageDialog(this, "Name cannot be blank!");
+                } else {
+                    gameFrame.player = new Player(input, db);
+                    this.dispose();
+                }
+            });
+            this.add(okButton);
+
+            JButton cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(e -> this.dispose());
+            this.add(cancelButton);
 
             this.pack();
             this.setLocationRelativeTo(gameFrame);
