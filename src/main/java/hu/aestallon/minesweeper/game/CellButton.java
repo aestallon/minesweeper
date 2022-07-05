@@ -1,4 +1,7 @@
-package hu.aestallon.minesweeper;
+package hu.aestallon.minesweeper.game;
+
+import hu.aestallon.minesweeper.GameFrame;
+import hu.aestallon.minesweeper.Main;
 
 import javax.swing.*;
 import java.awt.*;

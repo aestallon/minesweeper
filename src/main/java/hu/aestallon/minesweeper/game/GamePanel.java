@@ -1,4 +1,6 @@
-package hu.aestallon.minesweeper;
+package hu.aestallon.minesweeper.game;
+
+import hu.aestallon.minesweeper.scores.Player;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
@@ -16,6 +18,8 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
     /** Contains every {@link CellButton} present in this instance. */
     private final List<CellButton> cellButtons;
+    private final Player player;
+    private final int mineCount;
 
     /**
      * Constructs an instance with the given rows and columns and
@@ -25,8 +29,10 @@ public class GamePanel extends JPanel implements MouseInputListener {
      * @param cols      the {@code int} number of columns of the board
      * @param mineCount the {@code int} number of mines in the board
      */
-    public GamePanel(int rows, int cols, int mineCount) {
+    public GamePanel(Player player, int rows, int cols, int mineCount) {
         cellButtons = new ArrayList<>();
+        this.player = player;
+        this.mineCount = mineCount;
 
         Minefield minefield = new Minefield(rows, cols, mineCount);
         for (int i = 0; i < rows; i++) {
@@ -39,6 +45,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
         }
         this.setLayout(new GridLayout(rows, cols, 0, 0));
         this.setVisible(true);
+        player.startGame();
     }
 
     @Override
@@ -58,7 +65,13 @@ public class GamePanel extends JPanel implements MouseInputListener {
                 if (button.getValue() == '0') autoRevealZeros(button);
                 if (isVictory()) {
                     cellButtons.forEach(CellButton::setPassive);
-                    JOptionPane.showMessageDialog(null, "Gratulálunk nyertél!!!!");
+                    String message = null;
+                    switch (player.endGame(mineCount)) {
+                        case HIGH_SCORE -> message = "HIGH SCORE! Congratulations!";
+                        case PERSONAL_BEST -> message = "This is your current personal best! Keep up!";
+                        case REGULAR -> message = "Congratulations, you won!";
+                    }
+                    JOptionPane.showMessageDialog(null, message);
                 }
             }
         } else if (SwingUtilities.isRightMouseButton(event) && button.isInteractive()) {

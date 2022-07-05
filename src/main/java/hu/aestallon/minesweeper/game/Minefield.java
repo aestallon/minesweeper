@@ -1,4 +1,4 @@
-package hu.aestallon.minesweeper;
+package hu.aestallon.minesweeper.game;
 
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
