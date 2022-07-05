@@ -37,8 +37,8 @@ public final class Main {
             if (inputStream == null) {
                 throw new IllegalArgumentException("The provided sprite name (" + spriteName + ") is invalid!");
             }
-            BufferedImage bufferedImage = ImageIO.read(inputStream);
-            sprites.put(spriteName, bufferedImage);
+            BufferedImage sprite = ImageIO.read(inputStream);
+            sprites.put(spriteName, sprite);
         }
     }
 
