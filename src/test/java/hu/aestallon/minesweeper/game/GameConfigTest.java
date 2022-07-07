@@ -19,6 +19,19 @@ public class GameConfigTest {
         return rows *  cols - 1;
     }
 
+    private static int calculateExpectedScore(int mineCount, long startTime, long endTime) {
+        if (mineCount == 0 || startTime == 0 || endTime == 0) {
+            throw new IllegalArgumentException();
+        }
+        final int coeff  = 10_000_000;
+        long elapsedTime = endTime - startTime;
+
+        int dividend = mineCount * coeff;
+        int divisor  = (int) elapsedTime;
+
+        return dividend / divisor;
+    }
+
     @Mock
     private Player player = Mockito.mock(Player.class);
 
@@ -120,4 +133,103 @@ public class GameConfigTest {
                 () -> gameConfig.setMineCount(mineCount + 1)
         );
     }
+
+    @Test
+    public void newInstanceHasStartAndEndTimesOfZero() {
+        assertEquals(0, gameConfig.getStartTime());
+        assertEquals(0, gameConfig.getEndTime());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void StartTimeCannotBeSetToZero() {
+        gameConfig.setStartTime(0);
+    }
+
+    @Test
+    public void settingStartTimeToPositiveValue_shouldMakeGetterReturnIt() {
+        final long startTime = 1L;
+        gameConfig.setStartTime(1);
+        assertEquals(startTime, gameConfig.getStartTime());
+    }
+
+    @Test
+    public void settingEndTimeBeforeStartTimeYieldsException() {
+        final long startTime = 100L;
+        gameConfig.setStartTime(startTime);
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> gameConfig.setEndTime(startTime - 1)
+        );
+    }
+
+    @Test
+    public void settingEndTimeAfterStartTime_shouldMakeGetterReturnIt() {
+        final long startTime = 100L;
+        final long endtime = startTime + 1L;
+        gameConfig.setStartTime(startTime);
+        gameConfig.setEndTime(endtime);
+        assertEquals(endtime, gameConfig.getEndTime());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void callingCalculateScoreOnANewInstance_yieldsException() {
+        gameConfig.calculateScore();
+    }
+
+    @Test
+    public void validGameParametersShouldBeEvaluatedToCorrectScore0() {
+        final int mineCount = 100;
+        final long startTime = 16_5723_0113_000L;
+        final long endTime = 16_5723_0173_000L;
+
+        int expected = calculateExpectedScore(mineCount, startTime, endTime);
+
+        // Certainly valid board size:
+        gameConfig.setRows(mineCount);
+        gameConfig.setCols(mineCount);
+        // Setting relevant parameters to the calculation:
+        gameConfig.setStartTime(startTime);
+        gameConfig.setEndTime(endTime);
+        gameConfig.setMineCount(mineCount);
+        int actual = gameConfig.calculateScore();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void validGameParametersShouldBeEvaluatedToCorrectScore1() {
+        final int mineCount = 25;
+        final long startTime = 16_4693_0113_000L;
+        final long endTime = 16_4693_0179_000L;
+
+        int expected = calculateExpectedScore(mineCount, startTime, endTime);
+
+        // Certainly valid board size:
+        gameConfig.setRows(mineCount);
+        gameConfig.setCols(mineCount);
+        // Setting relevant parameters to the calculation:
+        gameConfig.setStartTime(startTime);
+        gameConfig.setEndTime(endTime);
+        gameConfig.setMineCount(mineCount);
+        int actual = gameConfig.calculateScore();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void validGameParametersShouldBeEvaluatedToCorrectScore2() {
+        final int mineCount = 1;
+        final long startTime = 10L;
+        final long endTime = 900L;
+
+        int expected = calculateExpectedScore(mineCount, startTime, endTime);
+
+        gameConfig.setStartTime(startTime);
+        gameConfig.setEndTime(endTime);
+        gameConfig.setMineCount(mineCount);
+        int actual = gameConfig.calculateScore();
+
+        assertEquals(expected, actual);
+    }
+
 }

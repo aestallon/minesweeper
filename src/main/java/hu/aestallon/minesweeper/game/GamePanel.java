@@ -48,7 +48,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
                 0, 0
         ));
         this.setVisible(true);
-        gameConfig.getPlayer().startGame();
+        gameConfig.setStartTime(System.currentTimeMillis());
     }
 
     @Override
@@ -61,15 +61,18 @@ public class GamePanel extends JPanel implements MouseInputListener {
             button.reveal();
 
             if (button.isMine()) {
+                gameConfig.setEndTime(System.currentTimeMillis());
                 cellButtons.forEach(CellButton::setPassive);
                 JOptionPane.showMessageDialog(null, "Sajnos vesztettél :(");
                 cellButtons.stream().filter(CellButton::isMine).forEach(CellButton::reveal);
             } else {
                 if (button.getValue() == '0') autoRevealZeros(button);
                 if (isVictory()) {
+                    gameConfig.setEndTime(System.currentTimeMillis());
                     cellButtons.forEach(CellButton::setPassive);
+                    int score = gameConfig.calculateScore();
                     String message = null;
-                    switch (gameConfig.getPlayer().endGame(gameConfig.getMineCount())) {
+                    switch (gameConfig.getPlayer().saveScore(score)) {
                         case HIGH_SCORE    -> message = "HIGH SCORE! Congratulations!";
                         case PERSONAL_BEST -> message = "This is your current personal best! Keep up!";
                         case REGULAR       -> message = "Congratulations, you won!";

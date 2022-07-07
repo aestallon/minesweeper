@@ -61,7 +61,7 @@ public class DatabaseHandler {
     }
 
 
-    public void initDatabase() {
+    private void initDatabase() {
         final String sql = """
                 CREATE TABLE IF NOT EXISTS scores(
                     id     integer      PRIMARY KEY,

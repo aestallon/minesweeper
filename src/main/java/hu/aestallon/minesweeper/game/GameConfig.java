@@ -40,6 +40,8 @@ public final class GameConfig {
     private int rows;
     private int cols;
     private int mineCount;
+    private long startTime;
+    private long endTime;
 
     /**
      * Creates a new instance with the minimum allowed sizes and
@@ -147,5 +149,50 @@ public final class GameConfig {
             throw new IllegalArgumentException("Too many mines!");
         }
         this.mineCount = mineCount;
+    }
+
+    /**
+     * Returns the timestamp of the game's start.
+     *
+     * @return the game's start time, in epoch-time (milliseconds)
+     */
+    public long getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * Sets the provided epoch time-stamp as the game's starting millisecond.
+     *
+     * @param startTime the {@code long} timestamp of the game's start time,
+     *                  in millisecond epoch-time
+     */
+    public void setStartTime(long startTime) {
+        if (startTime <= 0) {
+            throw new IllegalArgumentException("Invalid start time!");
+        }
+        this.startTime = startTime;
+    }
+
+    /**
+     * Returns the timestamp of the game's end.
+     *
+     * @return the game's start time, in epoch-time (milliseconds)
+     */
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        if (endTime < startTime) {
+            throw new IllegalArgumentException("Invalid end time!");
+        }
+        this.endTime = endTime;
+    }
+
+    public int calculateScore() {
+        if (mineCount == 0 || endTime == 0 || startTime == 0) {
+            throw new IllegalStateException("Cannot calculate score with empty fields!");
+        }
+        return (int) (mineCount * 10_000_000 / (endTime - startTime));
     }
 }
