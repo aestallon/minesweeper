@@ -19,6 +19,7 @@ public class DatabaseHandler {
     public static DatabaseHandler getInstance() {
         if (dbHandler == null) {
             dbHandler = new DatabaseHandler(DB_HEADER, getInstallDirectory(), DB_NAME);
+            dbHandler.initDatabase();
         }
         return dbHandler;
     }
