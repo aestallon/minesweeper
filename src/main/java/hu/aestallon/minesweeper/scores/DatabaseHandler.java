@@ -12,10 +12,15 @@ public class DatabaseHandler {
     private static final String DB_HEADER = "jdbc:sqlite:";
     private static final String DB_NAME = "/minesweeper.db";
 
+    private static DatabaseHandler dbHandler = null;
+
     private final String dbUrl;
 
     public static DatabaseHandler getInstance() {
-        return new DatabaseHandler(DB_HEADER, getInstallDirectory(), DB_NAME);
+        if (dbHandler == null) {
+            dbHandler = new DatabaseHandler(DB_HEADER, getInstallDirectory(), DB_NAME);
+        }
+        return dbHandler;
     }
 
     @SuppressWarnings("unused")
@@ -23,6 +28,13 @@ public class DatabaseHandler {
         return new DatabaseHandler(dbHeader, dbDirectory, dbName);
     }
 
+    /**
+     * Finds the directory where the JAR file containing the application is
+     * located.
+     *
+     * @return the string representation of the path to the directory
+     *         containing the application
+     */
     private static String getInstallDirectory() {
         String jarPath = Main.class
                 .getProtectionDomain()
@@ -38,6 +50,11 @@ public class DatabaseHandler {
         dbUrl = dbHeader + dbDirectory + dbName;
     }
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
     private Connection connect() throws SQLException {
         return DriverManager.getConnection(dbUrl);
     }
