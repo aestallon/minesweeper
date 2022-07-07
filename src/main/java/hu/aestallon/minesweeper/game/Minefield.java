@@ -24,6 +24,7 @@ public class Minefield {
 
     /** The value representing a mine in a minesweeper board. */
     public static final char MINE = 'x';
+    private static final ThreadLocalRandom RND = ThreadLocalRandom.current();
 
     private final char[][] cells;
 
@@ -77,12 +78,15 @@ public class Minefield {
      *                  {@link #MINE}.
      */
     private static void fillWithMines(int[][] minefield, int mineCount) {
-        for (int i = 0; i < mineCount; i++) {
-            int x = ThreadLocalRandom.current().nextInt(minefield.length);
-            int y = ThreadLocalRandom.current().nextInt(minefield[0].length);
+        int i = 0;
+        while (i < mineCount) {
+            int x = RND.nextInt(minefield.length);
+            int y = RND.nextInt(minefield[0].length);
 
-            if (minefield[x][y] != MINE) minefield[x][y] = MINE;
-            else i--;
+            if (minefield[x][y] != MINE) {
+                minefield[x][y] = MINE;
+                i++;
+            }
         }
     }
 
@@ -119,12 +123,14 @@ public class Minefield {
         final int[] dirs = {-1, 0, 1};
         for (int dirR : dirs) {
             for (int dirC : dirs) {
-                if ((r + dirR >= 0 && r + dirR < arr.length) &&
-                        (c + dirC >= 0 && c + dirC < arr[0].length) &&
-                        (arr[r + dirR][c + dirC] != MINE) &&
+                int rowPos = r + dirR;
+                int colPos = c + dirC;
+                if ((rowPos >= 0 && rowPos < arr.length) &&
+                        (colPos >= 0 && colPos < arr[0].length) &&
+                        (arr[rowPos][colPos] != MINE) &&
                         !(dirR == 0 && dirC == 0)
                 ) {
-                    arr[r + dirR][c + dirC]++;
+                    arr[rowPos][colPos]++;
                 }
             }
         }
