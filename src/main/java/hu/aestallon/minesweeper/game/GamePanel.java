@@ -67,9 +67,9 @@ public class GamePanel extends JPanel implements MouseInputListener {
                     cellButtons.forEach(CellButton::setPassive);
                     String message = null;
                     switch (player.endGame(mineCount)) {
-                        case HIGH_SCORE -> message = "HIGH SCORE! Congratulations!";
+                        case HIGH_SCORE    -> message = "HIGH SCORE! Congratulations!";
                         case PERSONAL_BEST -> message = "This is your current personal best! Keep up!";
-                        case REGULAR -> message = "Congratulations, you won!";
+                        case REGULAR       -> message = "Congratulations, you won!";
                     }
                     JOptionPane.showMessageDialog(null, message);
                 }
@@ -138,11 +138,9 @@ public class GamePanel extends JPanel implements MouseInputListener {
      * be considered won.
      */
     private boolean isVictory() {
-        long untouchedSafeCells = cellButtons.stream()
+        return cellButtons.stream()
                 .filter(cb -> !cb.isMine())
-                .filter(CellButton::isInteractive)
-                .count();
-        return untouchedSafeCells == 0;
+                .noneMatch(CellButton::isInteractive);
     }
 
     //--------------------------------------------------------------------------
@@ -151,31 +149,31 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent event) {
-
+        // Unused method
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        // Unused method
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        // Unused method
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        // Unused method
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
+        // Unused method
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        // Unused method
     }
 }
