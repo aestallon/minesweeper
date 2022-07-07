@@ -1,7 +1,5 @@
 package hu.aestallon.minesweeper.game;
 
-import hu.aestallon.minesweeper.scores.Player;
-
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
@@ -18,34 +16,39 @@ public class GamePanel extends JPanel implements MouseInputListener {
 
     /** Contains every {@link CellButton} present in this instance. */
     private final List<CellButton> cellButtons;
-    private final Player player;
-    private final int mineCount;
+    private final GameConfig gameConfig;
 
     /**
      * Constructs an instance with the given rows and columns and
      * number of mines.
      *
-     * @param rows      the {@code int} number of rows of the board
-     * @param cols      the {@code int} number of columns of the board
-     * @param mineCount the {@code int} number of mines in the board
+     * @param gameConfig the {@link GameConfig} object containing all
+     *                   game configuration related information
      */
-    public GamePanel(Player player, int rows, int cols, int mineCount) {
+    public GamePanel(GameConfig gameConfig) {
         cellButtons = new ArrayList<>();
-        this.player = player;
-        this.mineCount = mineCount;
+        this.gameConfig = gameConfig;
 
-        Minefield minefield = new Minefield(rows, cols, mineCount);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        Minefield minefield = new Minefield(
+                gameConfig.getRows(),
+                gameConfig.getCols(),
+                gameConfig.getMineCount()
+        );
+        for (int i = 0; i < gameConfig.getRows(); i++) {
+            for (int j = 0; j < gameConfig.getCols(); j++) {
                 CellButton cellButton = new CellButton(i, j, minefield.getCell(i, j));
                 this.add(cellButton);
                 cellButtons.add(cellButton);
                 cellButton.addMouseListener(this);
             }
         }
-        this.setLayout(new GridLayout(rows, cols, 0, 0));
+        this.setLayout(new GridLayout(
+                gameConfig.getRows(),
+                gameConfig.getCols(),
+                0, 0
+        ));
         this.setVisible(true);
-        player.startGame();
+        gameConfig.getPlayer().startGame();
     }
 
     @Override
@@ -66,7 +69,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
                 if (isVictory()) {
                     cellButtons.forEach(CellButton::setPassive);
                     String message = null;
-                    switch (player.endGame(mineCount)) {
+                    switch (gameConfig.getPlayer().endGame(gameConfig.getMineCount())) {
                         case HIGH_SCORE    -> message = "HIGH SCORE! Congratulations!";
                         case PERSONAL_BEST -> message = "This is your current personal best! Keep up!";
                         case REGULAR       -> message = "Congratulations, you won!";
