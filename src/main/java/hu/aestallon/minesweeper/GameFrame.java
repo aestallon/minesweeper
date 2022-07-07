@@ -1,5 +1,6 @@
 package hu.aestallon.minesweeper;
 
+import hu.aestallon.minesweeper.game.GameConfig;
 import hu.aestallon.minesweeper.game.GamePanel;
 import hu.aestallon.minesweeper.scores.DatabaseHandler;
 import hu.aestallon.minesweeper.scores.Player;
@@ -12,38 +13,21 @@ public class GameFrame extends JFrame {
     /** This is the height and width of the cells in the game, given in pixels. */
     public static final int CELL_SIZE = 30;
 
-    private static final int SMALL = 8;
-    private static final int MEDIUM = 10;
-    private static final int LARGE = 16;
+    private static final DatabaseHandler db = DatabaseHandler.getInstance();
 
-    private static final int SMALL_MINE_COUNT = 5;
-    private static final int MEDIUM_MINE_COUNT = 10;
-    private static final int LARGE_MINE_COUNT = 55;
-
-    private static final DatabaseHandler db;
-
-    static {
-        db = DatabaseHandler.getInstance();
-        db.initDatabase();
-    }
+    private final GameConfig gameConfig;
 
     private GamePanel gamePanel;
-    private int gameRows;
-    private int gameCols;
-    private int mineCount;
-    private Player player;
-
     private JButton newGameButton;
 
     public GameFrame() {
-        player = new Player("guest", db);
+        // Default game configuration setup:
+        Player defaultPlayer = new Player("guest", db);
+        gameConfig = new GameConfig(defaultPlayer);
+
+        // Frame initialization:
         initAppearance();
         initMenuBar();
-
-        // Misc setup
-        this.setResizable(false);
-        this.setTitle("Home-Cooked Minesweeper");
-        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
@@ -56,6 +40,9 @@ public class GameFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(335, 80);
         this.setLayout(null);
+        this.setResizable(false);
+        this.setTitle("Home-Cooked Minesweeper");
+        this.setLocationRelativeTo(null);
     }
 
     private void initMenuBar() {
@@ -67,7 +54,9 @@ public class GameFrame extends JFrame {
 
         JMenuItem smallGame = new JRadioButtonMenuItem("Small");
         smallGame.addActionListener(e -> {
-            setGameParameters(SMALL, SMALL, SMALL_MINE_COUNT);
+            gameConfig.setCols(GameConfig.SMALL);
+            gameConfig.setRows(GameConfig.SMALL);
+            gameConfig.setMineCount(GameConfig.SMALL_MINE_COUNT);
             newGameButton.setEnabled(true);
         });
         settingsGroup.add(smallGame);
@@ -75,7 +64,9 @@ public class GameFrame extends JFrame {
 
         JMenuItem mediumGame = new JRadioButtonMenuItem("Medium");
         mediumGame.addActionListener(e -> {
-            setGameParameters(MEDIUM, MEDIUM, MEDIUM_MINE_COUNT);
+            gameConfig.setCols(GameConfig.MEDIUM);
+            gameConfig.setRows(GameConfig.MEDIUM);
+            gameConfig.setMineCount(GameConfig.MEDIUM_MINE_COUNT);
             newGameButton.setEnabled(true);
         });
         settingsGroup.add(mediumGame);
@@ -83,7 +74,9 @@ public class GameFrame extends JFrame {
 
         JMenuItem largeGame = new JRadioButtonMenuItem("Large");
         largeGame.addActionListener(e -> {
-            setGameParameters(LARGE, LARGE, LARGE_MINE_COUNT);
+            gameConfig.setCols(GameConfig.LARGE);
+            gameConfig.setRows(GameConfig.LARGE);
+            gameConfig.setMineCount(GameConfig.LARGE_MINE_COUNT);
             newGameButton.setEnabled(true);
         });
         settingsGroup.add(largeGame);
@@ -129,19 +122,13 @@ public class GameFrame extends JFrame {
         newGameButton.setFocusable(false);
         newGameButton.setEnabled(false);            // any valid game setup enables this
         newGameButton.addActionListener(e -> {
-            if (gameRows != 0) createNewGame(player, gameRows, gameCols, mineCount);
+            createNewGame();
         });
         menuBar.add(Box.createHorizontalGlue());    // force the button to be on the right side.
 
         menuBar.add(newGameButton);
 
         this.setJMenuBar(menuBar);
-    }
-
-    private void setGameParameters(int gameRows, int gameCols, int mineCount) {
-        this.gameRows = gameRows;
-        this.gameCols = gameCols;
-        this.mineCount = mineCount;
     }
 
     /**
@@ -152,17 +139,14 @@ public class GameFrame extends JFrame {
      * provided, then adds the panel back to the instance. Finally, the
      * instance is refreshed to let the user see and interact with the
      * changes.
-     *
-     * @param gameRows  The {@code int} number of rows in the game's
-     *                  board
-     * @param gameCols  The {@code int} number of columns in the game's
-     *                  board
-     * @param mineCount The number of mines present in the game.
      */
-    private void createNewGame(Player player, int gameRows, int gameCols, int mineCount) {
+    private void createNewGame() {
         if (gamePanel != null) remove(gamePanel);
-        gamePanel = new GamePanel(player, gameRows, gameCols, mineCount);
-        gamePanel.setSize(gameCols * CELL_SIZE, gameRows * CELL_SIZE);
+        gamePanel = new GamePanel(gameConfig);
+        gamePanel.setSize(
+                gameConfig.getCols() * CELL_SIZE,
+                gameConfig.getRows() * CELL_SIZE
+        );
         gamePanel.setLocation(0, 0);
         this.setSize(gamePanel.getWidth() + 15, gamePanel.getHeight() + 65);
         this.add(gamePanel);
@@ -220,19 +204,15 @@ public class GameFrame extends JFrame {
                 int rows = Integer.parseInt(rowTextField.getText());
                 int cols = Integer.parseInt(colTextField.getText());
                 int mineCount = Integer.parseInt(mineTextField.getText());
-                if (rows < 1 || cols < 1) {
-                    throw new IllegalArgumentException("Number of rows and columns have to be at least 1!");
-                }
-                if (mineCount > rows * cols) {
-                    throw new IllegalArgumentException("Number of mines is too large!");
-                }
-                gameFrame.setGameParameters(rows, cols, mineCount);
+                gameFrame.gameConfig.setRows(rows);
+                gameFrame.gameConfig.setCols(cols);
+                gameFrame.gameConfig.setMineCount(mineCount);
                 this.dispose();
                 gameFrame.newGameButton.setEnabled(true);
-            } catch (NumberFormatException ex) {
+            } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Please provide numbers!");
-            } catch (IllegalArgumentException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage());
+            } catch (IllegalArgumentException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
             }
         }
     }
@@ -242,24 +222,24 @@ public class GameFrame extends JFrame {
         private static final String howToPlayText = """
                 <html>
                 <h1>How to Play</font></h1>
-                
+                                
                 <h2>Start a game</h2>
-                
+                                
                 <p>Click on the "Settings" menu and select the desired difficulty.<br>
                 If you want to play with a custom board, select "Custom..." and<br>
                 specify the board to your liking.<br>
-                
+                                
                 <p>Once a difficulty is selected, click on the "New Game" button<br>
                 to start a new game.
-                
+                                
                 <h2>Playing the game<h2>
-                
+                                
                 <p>Left-clicking any cell will reveal what lies hidden under it.<br>
                 If you left-click on any cell which contained a mine, you lose!<br>
                 Cells that instead contain a number tell you how many neighbouring<br>
                 cells are mines. Use this information to carefully avoid any mines.<br>
                 Once you revealed every safe cell, you win the game!
-                
+                                
                 <p>Right-clicking any cell will mark it as "suspected". Suspected<br>
                 mines cannot be left-clicked, so you can prevent yourself clicking<br>
                 on a mine by mistake! Right-clicking a suspected mine again will<br>
@@ -276,6 +256,7 @@ public class GameFrame extends JFrame {
             ABOUT(aboutText);
 
             final String text;
+
             ContentType(String text) {
                 this.text = text;
             }
@@ -334,7 +315,7 @@ public class GameFrame extends JFrame {
                 if (input.isEmpty() || input.isBlank()) {
                     JOptionPane.showMessageDialog(this, "Name cannot be blank!");
                 } else {
-                    gameFrame.player = new Player(input, db);
+                    gameFrame.gameConfig.setPlayer(new Player(input, db));
                     this.dispose();
                 }
             });
