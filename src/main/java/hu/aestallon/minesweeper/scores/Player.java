@@ -11,10 +11,7 @@ public final class Player {
     private final DatabaseHandler databaseHandler;
 
     private int personalBest;
-
     private long startTime;
-    private long endTime;
-    private int currentScore;
 
     public Player(String name, DatabaseHandler databaseHandler) {
         this.name = Objects.requireNonNull(name);
@@ -27,6 +24,10 @@ public final class Player {
             Collections.sort(scores);
             personalBest = scores.get(scores.size() - 1);
         }
+    }
+
+    public int getPersonalBest() {
+        return personalBest;
     }
 
     public ScoreCategory saveScore(int score) {
@@ -50,7 +51,7 @@ public final class Player {
     }
 
     public ScoreCategory endGame(int mineCount) {
-        this.endTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();
         long gameTime = endTime - startTime;
         int score = calculateScore(gameTime, mineCount);
         return this.saveScore(score);
