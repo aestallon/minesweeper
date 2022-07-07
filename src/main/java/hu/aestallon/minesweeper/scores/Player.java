@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public final class Player {
+public class Player {
 
     private final String name;
-    private List<Integer> scores;
+    private final List<Integer> scores;
     private final DatabaseHandler databaseHandler;
 
     private int personalBest;
@@ -24,6 +24,10 @@ public final class Player {
             Collections.sort(scores);
             personalBest = scores.get(scores.size() - 1);
         }
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public int getPersonalBest() {
