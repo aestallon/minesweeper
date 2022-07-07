@@ -97,6 +97,8 @@ public class CellButton extends JButton {
     }
 
     /**
+     * Checks whether this CellButton hides a mine or not.
+     *
      * @return true if the instance is suspected to be hiding
      *         a mine, false otherwise.
      */

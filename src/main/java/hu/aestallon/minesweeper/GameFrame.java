@@ -83,9 +83,7 @@ public class GameFrame extends JFrame {
         settingsMenu.add(largeGame);
 
         JMenuItem customGame = new JRadioButtonMenuItem("Custom...");
-        customGame.addActionListener(e ->
-                new CustomGameDialog(this)
-        );
+        customGame.addActionListener(e -> new CustomGameDialog());
         settingsGroup.add(customGame);
         settingsMenu.add(customGame);
 
@@ -95,11 +93,11 @@ public class GameFrame extends JFrame {
         JMenu helpMenu = new JMenu("Help");
 
         JMenuItem howToPlay = new JMenuItem("How to Play");
-        howToPlay.addActionListener(e -> new InfoFrame(this, InfoFrame.ContentType.HOW_TO_PLAY));
+        howToPlay.addActionListener(e -> new InfoFrame(InfoFrame.ContentType.HOW_TO_PLAY));
         helpMenu.add(howToPlay);
 
         JMenuItem about = new JMenuItem("About");
-        about.addActionListener(e -> new InfoFrame(this, InfoFrame.ContentType.ABOUT));
+        about.addActionListener(e -> new InfoFrame(InfoFrame.ContentType.ABOUT));
         helpMenu.add(about);
 
         menuBar.add(helpMenu);
@@ -108,11 +106,11 @@ public class GameFrame extends JFrame {
         JMenu scoreMenu = new JMenu("Scores");
 
         JMenuItem highScores = new JMenuItem("High Scores");
-        highScores.addActionListener(e -> new HighScoreFrame(this));
+        highScores.addActionListener(e -> new HighScoreFrame());
         scoreMenu.add(highScores);
 
         JMenuItem changeName = new JMenuItem("Change name...");
-        changeName.addActionListener(e -> new PlayerChangeDialog(this));
+        changeName.addActionListener(e -> new PlayerChangeDialog());
         scoreMenu.add(changeName);
 
         menuBar.add(scoreMenu);
@@ -121,9 +119,7 @@ public class GameFrame extends JFrame {
         newGameButton = new JButton("New Game");
         newGameButton.setFocusable(false);
         newGameButton.setEnabled(false);            // any valid game setup enables this
-        newGameButton.addActionListener(e -> {
-            createNewGame();
-        });
+        newGameButton.addActionListener(e -> createNewGame());
         menuBar.add(Box.createHorizontalGlue());    // force the button to be on the right side.
 
         menuBar.add(newGameButton);
@@ -153,9 +149,9 @@ public class GameFrame extends JFrame {
         SwingUtilities.updateComponentTreeUI(this);
     }
 
-    private static class CustomGameDialog extends JFrame {
+    private class CustomGameDialog extends JFrame {
 
-        private CustomGameDialog(GameFrame gameFrame) {
+        private CustomGameDialog() {
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             this.setSize(220, 200);
 
@@ -177,7 +173,6 @@ public class GameFrame extends JFrame {
             JButton okButton = new JButton("OK");
             okButton.addActionListener(e ->
                     parseUserInputs(
-                            gameFrame,
                             rowTextField,
                             colTextField,
                             mineTextField
@@ -194,21 +189,20 @@ public class GameFrame extends JFrame {
             this.setVisible(true);
         }
 
-        private void parseUserInputs(
-                GameFrame gameFrame,
-                JTextField rowTextField,
-                JTextField colTextField,
-                JTextField mineTextField) {
-
+        private void parseUserInputs(JTextField rowTextField,
+                                     JTextField colTextField,
+                                     JTextField mineTextField) {
             try {
                 int rows = Integer.parseInt(rowTextField.getText());
                 int cols = Integer.parseInt(colTextField.getText());
                 int mineCount = Integer.parseInt(mineTextField.getText());
-                gameFrame.gameConfig.setRows(rows);
-                gameFrame.gameConfig.setCols(cols);
-                gameFrame.gameConfig.setMineCount(mineCount);
+
+                GameFrame.this.gameConfig.setRows(rows);
+                GameFrame.this.gameConfig.setCols(cols);
+                GameFrame.this.gameConfig.setMineCount(mineCount);
+
                 this.dispose();
-                gameFrame.newGameButton.setEnabled(true);
+                GameFrame.this.newGameButton.setEnabled(true);
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Please provide numbers!");
             } catch (IllegalArgumentException e) {
@@ -217,7 +211,7 @@ public class GameFrame extends JFrame {
         }
     }
 
-    private static class InfoFrame extends JFrame {
+    private class InfoFrame extends JFrame {
 
         private static final String howToPlayText = """
                 <html>
@@ -262,20 +256,20 @@ public class GameFrame extends JFrame {
             }
         }
 
-        private InfoFrame(GameFrame gameFrame, ContentType contentType) {
+        private InfoFrame(ContentType contentType) {
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
             JLabel info = new JLabel(contentType.text);
             this.add(info);
 
             this.pack();
-            this.setLocationRelativeTo(gameFrame);
+            this.setLocationRelativeTo(GameFrame.this);
             this.setVisible(true);
         }
     }
 
-    private static class HighScoreFrame extends JFrame {
-        private HighScoreFrame(GameFrame gameFrame) {
+    private class HighScoreFrame extends JFrame {
+        private HighScoreFrame() {
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             this.setTitle("High Scores");
             this.setLayout(new GridLayout(11, 2));
@@ -294,13 +288,13 @@ public class GameFrame extends JFrame {
             });
 
             this.pack();
-            this.setLocationRelativeTo(gameFrame);
+            this.setLocationRelativeTo(GameFrame.this);
             this.setVisible(true);
         }
     }
 
-    private static class PlayerChangeDialog extends JFrame {
-        private PlayerChangeDialog(GameFrame gameFrame) {
+    private class PlayerChangeDialog extends JFrame {
+        private PlayerChangeDialog() {
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             this.setTitle("High Scores");
             this.setLayout(new GridLayout(2, 2));
@@ -315,7 +309,8 @@ public class GameFrame extends JFrame {
                 if (input.isEmpty() || input.isBlank()) {
                     JOptionPane.showMessageDialog(this, "Name cannot be blank!");
                 } else {
-                    gameFrame.gameConfig.setPlayer(new Player(input, db));
+                    GameFrame.this.gameConfig
+                            .setPlayer(new Player(input, db));
                     this.dispose();
                 }
             });
@@ -326,7 +321,7 @@ public class GameFrame extends JFrame {
             this.add(cancelButton);
 
             this.pack();
-            this.setLocationRelativeTo(gameFrame);
+            this.setLocationRelativeTo(GameFrame.this);
             this.setVisible(true);
         }
     }
