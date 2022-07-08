@@ -15,6 +15,7 @@ public class GameFrame extends JFrame {
 
     private static final DatabaseHandler db = DatabaseHandler.getInstance();
 
+    /** Stores game configuration data needed for the creation of new games. */
     private final GameConfig gameConfig;
 
     private GamePanel gamePanel;
@@ -31,6 +32,12 @@ public class GameFrame extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * Initializes the appearance of the frame.
+     *
+     * <p>Sets the look-and-feel, size, title, location and general appearance
+     * related properties of this instance.
+     */
     private void initAppearance() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -45,6 +52,12 @@ public class GameFrame extends JFrame {
         this.setLocationRelativeTo(null);
     }
 
+    /**
+     * Initializes the appearance and functionality of the menu bar.
+     *
+     * <p>Defines and adds the various menus and menu items to this
+     * frame and adds event listeners to each.
+     */
     private void initMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
@@ -118,9 +131,11 @@ public class GameFrame extends JFrame {
         // New Game Button
         newGameButton = new JButton("New Game");
         newGameButton.setFocusable(false);
-        newGameButton.setEnabled(false);            // any valid game setup enables this
+        // only enabled if gameConfig holds valid parameters:
+        newGameButton.setEnabled(false);
         newGameButton.addActionListener(e -> createNewGame());
-        menuBar.add(Box.createHorizontalGlue());    // force the button to be on the right side.
+        // force the button to be on the right side:
+        menuBar.add(Box.createHorizontalGlue());
 
         menuBar.add(newGameButton);
 
