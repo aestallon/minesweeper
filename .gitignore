@@ -5,8 +5,3 @@ minesweeper.iml
 # Production files
 out/
 target/
-
-# Maven wrapper
-.mvn/
-mvnw
-mvnw.cmd
