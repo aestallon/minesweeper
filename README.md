@@ -1,111 +1,54 @@
-# minesweeper
-Simple Minesweeper in Java
-## HU
-### Setup & Játékmenet
-1) Töltsd le ugyanazon mappába a `Minesweeper.jar` és `MANIFEST.MF` file-okat, illetve a `graphics` mappát.
-2) Nyiss meg egy parancssort, és lépj a letöltési mappába.
-3) `java -jar Minesweeper.jar` paranccsal indul a program.
-4) Futtatás során, hiba esetén a parancssorban kapsz értesítést a hibá(k)ról.
+# 🚩💣 Minesweeper 💣 🚩
 
-Új játék kezdésekor a parancssoron megjelenik a megoldókulcs.
+A simple Minesweeper written in Java, using an SQLite database to keep track of your high scores.
 
-Bal kattintásra megjelenik a cella tartalma, jobb kattintásra a cella 'gyanús'-nak jelölhető. Újabb jobb kattintásra
-a cella ismét 'nem gyanús'-sá válik. Ha minden aknát tartalmazó cellát 'gyanús'-nak jelöltél,
-a `Submit` gomb megnyomásával leellenőrízhető a megoldás.
+<p align="center">
+    <img src="screenshot_folder/small_start.JPG" /> 
+</p>
 
-### Forráskód
-#### CellButton.java (GUI)
+## Table of Contents
 
-A **CellButton** az Aknakereső egyes celláinak nyomógombját írja le: hogy nézzen ki és milyen értékeket tároljon:
-- isSus: true, ha a felhasználó gyanítja, hogy aknát rejt
-- isUncovered: true, ha a felhasználó már felfedte az értékét (azaz rákattintott bal    egérgombbal);
-- isMine: true, ha a aknát rejt;
-- value: String-ként tárolja a a gomb 'alatt' lévő értéket (0, 1, ... 8, vagy "x" akna esetén);
+- [Description](#description)
+- [Technologies](#technologies)
+- [Installation](#installation)
 
-A `set` kezdetű metódusok a fenti boolean tulajdonságokat tudják átállítani.
+## Description
 
-A `setCellButtonImage` metódus arra jó, hogy a cellagomb képét lehet vele változtatni.
+The game features 3 different built-in board sizes and the option to create your very own board! Once you set up your
+perfect board parameters, the game will remember your last choice, and you can play again and again by
+clicking `New Game`!
 
-*Ezeket leszámítva a cellagomb Swing-es JButton-ként viselkedik.*
+> ![Creation of a custom board](screenshot_folder/custom_game_setup.JPG)
 
-#### Minefield.java ("backend")
+You may also save your name in the `Scores` menu:
 
-Ez az osztály egy 'aknamezőt' generál. Az aknamezőnek cellái vannak (Minefield.cells). Ez egy string tömb. A cella értéke `x`, ha a cella egy akna, egyébként `0`, ha egyetlen szomszédja se akna, `1`, ha pontosan 1 szomszédja akna, és így tovább. Minden cellának maximum 8 szomszédja van ( az aknamező szélein értelemszerűen kevesebb ), így ez az érték maximum `8` lehet.
+> ![Changing name](screenshot_folder/player_change_dialog.JPG)
 
-#### MinesweeperGrid.java (GUI)
+When a game is won, your score is calculated and saved to the database. The top 10 achievers can be checked at any time:
 
-Ez az osztály egy cellagombokból álló rács készítésére való. A megadott pályaméret és aknaszám alapján generál egy aknamezőt (lásd: Minefield.java) és ehhez generál cellagombokból rácsleosztásban egy panelt.
-Itt található a metódus, ami leírja, hogy mi történjen ha egy cellagombra kattintunk.
+> ![Top 10 High Scores](screenshot_folder/high_score_ledger.JPG)
 
-*(Ezt leszámítva a minesweeperGrid egy Swing-es JPanel-ként viselkedik.)*
+You will also receive a unique message whenever you win a game by a score which is your new personal best, or if you
+beat the previous high score!
 
-#### MsFrame.java (GUI)
+## Technologies
+
+- The application features a simplistic graphical user interface (GUI) written in Java using the evergreen Swing
+  framework.
+- Game score related information is stored in an SQLite database.
+- Tests are conducted in JUnit 4 and Mockito.
+
+## Installation
+
+To compile and run the project you need Java 17 (or newer) installed on your computer.
+
+1. Clone or download the project.
+2. Navigate to the project's directory.
+3. You can compile the project using Maven:
+    - If you have Maven installed, you can execute `mvn clean compile assembly:single`.
+    - Alternatively, you can use the provided Maven wrapper and execute `./mvnw clean compile assembly:single` instead.
+4. After successful compilation, navigate to the `target` subdirectory, where you can find the executable JAR file.
+5. While in the JAR's directory, launch the application by executing `java -jar minesweeper<versioning>.jar`!
+6. Enjoy!
 
 
-Ez az osztály létrehozza a program GUI-ját. A felső gombokat (új játék méretválasztók, és a megoldásbeküldő `Submit` gomb) és az alul lévő játékteret (minesweeperGrid).
-
-#### Main.java
-*A psvm metódus értelemszerűen a Main.java osztályban található.*
-
-Először azt ellenőrzi le, hogy megvan-e minden képfájl, ami a cellák megrajzolásához szükségesek. Ha ez
-sikeresen lezajlott, egy játékablak konstrukciója történik.
-
-### Screenshot folder
-
-Itt képernyőképek találhatóak arról, hogy nálam hogy működik a program.
-
-## EN
-### Setup
-1) Download the files `Minesweeper.jar`, `MANIFEST.MF` and the directory `graphics` into the directory of your
-choice.
-2) Open a Command Prompt and navigate to your download directory.
-3) The program may be started with the command `java -jar Minesweeper.jar`.
-4) During program execution, the Command Prompt may inform you of any occuring errors.
-
-Starting a new game will print the solution to the Command Prompt.
-
-Left clicking on a cell will reveal its content, right clicking will flag it 'suspicious'. Further right clicks
-will un-flag and flag the cell as such. If all cells containing a mine are flagged as 'suspicious', pressing the
-`Submit` button will confirm your solution.
-
-### Source code
-#### CellButton.java (GUI)
-
-**CellButton** describes the buttons representing each cell of the minefield (their looks and stored values):
-- `isSus`: `true`, if the user suspects the cell contains a mine.
-- `isUncovered`: `true`, if the user already uncovered the cell's contents by left-clicking on it;
-- `isMine`: `true`, if the cell contains a mine;
-- `value`: stores the cell's value as a string ("0", "1", ... "8", or "x" if the cell's a mine);
-
-Methods starting with `set` are used to set the above attributes.
-
-The `setCellButtonImage` method is used to change the cell's appearance.
-
-*Apart from these, the CellButton behaves as a standard Swing JButton.*
-
-#### Minefield.java ("backend")
-
-This class is used to generate a minefield. Its cells are represented as entries in a String[][] array.
-
-#### MinesweeperGrid.java (GUI)
-
-This class creates the gameplay area by populating a grid with CellButtons and by constructing a minefield using the previous class.
-This is where the MouseEventListener is implemented to respond to user inputs.
-
-*(Apart from these, the MinesweeperGrid works as a Swing JPanel)*
-
-#### MsFrame.java (GUI)
-
-This class describes the window(frame) of the game, containing the buttons used for initiating a new game, the `Submit` button
-used for submitting a solution, and the panel in which the game takes place.
-
-#### Main.java
-
-*Naturally, you can find the psvm method here.*
-
-First the presence of the images necessary for decorating the minesweeper are checked, then
-a new game window is constructed.
-
-### Screenshot folder
-
-Contains example images showcasing the program.

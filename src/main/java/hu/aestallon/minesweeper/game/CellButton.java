@@ -1,4 +1,7 @@
-package hu.aestallon.minesweeper;
+package hu.aestallon.minesweeper.game;
+
+import hu.aestallon.minesweeper.GameFrame;
+import hu.aestallon.minesweeper.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,6 +97,8 @@ public class CellButton extends JButton {
     }
 
     /**
+     * Checks whether this CellButton hides a mine or not.
+     *
      * @return true if the instance is suspected to be hiding
      *         a mine, false otherwise.
      */
