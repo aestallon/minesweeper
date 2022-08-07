@@ -1,7 +1,6 @@
 package hu.aestallon.minesweeper.game;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -68,7 +67,7 @@ public class GamePanel extends JPanel {
             if (button.isMine()) {
                 gameConfig.setEndTime(System.currentTimeMillis());
                 cellButtons.forEach(CellButton::setPassive);
-                JOptionPane.showMessageDialog(null, "Sajnos vesztettél :(");
+                JOptionPane.showMessageDialog(null, "Sadly you lost. :(");
                 cellButtons.stream().filter(CellButton::isMine).forEach(CellButton::reveal);
             } else {
                 if (button.getValue() == '0') autoRevealZeros(button);

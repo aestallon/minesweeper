@@ -52,9 +52,10 @@ public class DatabaseHandler {
     }
 
     /**
+     * Establishes connection to the database.
      *
-     * @return
-     * @throws SQLException
+     * @return a {@code Connection} instance representing the connection to the database
+     * @throws SQLException if a database access error occurs
      */
     private Connection connect() throws SQLException {
         return DriverManager.getConnection(dbUrl);
@@ -76,6 +77,7 @@ public class DatabaseHandler {
         }
     }
 
+    @SuppressWarnings("unused")
     public void clear() {
         final String sql = "DELETE FROM scores;";
         try (Connection conn = connect()) {

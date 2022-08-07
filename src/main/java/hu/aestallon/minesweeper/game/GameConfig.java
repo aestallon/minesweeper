@@ -6,7 +6,7 @@ import hu.aestallon.minesweeper.scores.Player;
  * Stores configuration information used for setting up and evaluating a single
  * session of Minesweeper.
  *
- * <p>Instances store a given gameboard attributes (number of rows, columns and
+ * <p>Instances store a given game-board attributes (number of rows, columns and
  * mines hidden) and the {@link Player} associated with it.
  *
  * @author Szabolcs Bazil Papp
