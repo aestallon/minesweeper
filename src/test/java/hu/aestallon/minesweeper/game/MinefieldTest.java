@@ -82,7 +82,9 @@ public class MinefieldTest {
     }
 
     private static boolean isDigit(char ch) {
-        return 0 < (ch - '0') && (ch - '0') < 10;
+        // ch1 - ch2 returns the integer associated with the
+        // characters' Unicode table value:
+        return (ch - '0') >= 0 && (ch - '0') < 10;
     }
 
     private static int toDigit(char ch) {
