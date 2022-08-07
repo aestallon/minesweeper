@@ -179,8 +179,8 @@ public class GameConfigTest {
     @Test
     public void validGameParametersShouldBeEvaluatedToCorrectScore0() {
         final int mineCount = 100;
-        final long startTime = 16_5723_0113_000L;
-        final long endTime = 16_5723_0173_000L;
+        final long startTime = 1_657_230_113_000L;
+        final long endTime = 1_657_230_173_000L;
 
         int expected = calculateExpectedScore(mineCount, startTime, endTime);
 
