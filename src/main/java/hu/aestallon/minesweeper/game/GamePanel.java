@@ -3,6 +3,7 @@ package hu.aestallon.minesweeper.game;
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
  * An extended {@link JPanel} displaying an interactive Minesweeper
  * board.
  */
-public class GamePanel extends JPanel implements MouseInputListener {
+public class GamePanel extends JPanel {
 
     /** Contains every {@link CellButton} present in this instance. */
     private final List<CellButton> cellButtons;
@@ -39,7 +40,12 @@ public class GamePanel extends JPanel implements MouseInputListener {
                 CellButton cellButton = new CellButton(i, j, minefield.getCell(i, j));
                 this.add(cellButton);
                 cellButtons.add(cellButton);
-                cellButton.addMouseListener(this);
+                cellButton.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        GamePanel.this.processCellButtonClick(e);
+                    }
+                });
             }
         }
         this.setLayout(new GridLayout(
@@ -51,8 +57,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
         gameConfig.setStartTime(System.currentTimeMillis());
     }
 
-    @Override
-    public void mousePressed(MouseEvent event) {
+    private void processCellButtonClick(MouseEvent event) {
         CellButton button = (CellButton) event.getSource();
         if (SwingUtilities.isLeftMouseButton(event) &&
                 !button.isSus() &&
@@ -70,6 +75,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
                 if (isVictory()) {
                     gameConfig.setEndTime(System.currentTimeMillis());
                     cellButtons.forEach(CellButton::setPassive);
+
                     int score = gameConfig.calculateScore();
                     String message = null;
                     switch (gameConfig.getPlayer().saveScore(score)) {
@@ -147,39 +153,5 @@ public class GamePanel extends JPanel implements MouseInputListener {
         return cellButtons.stream()
                 .filter(cb -> !cb.isMine())
                 .noneMatch(CellButton::isInteractive);
-    }
-
-    //--------------------------------------------------------------------------
-    // These methods are unused, but due to the nature of interfaces they must
-    // be overridden:
-
-    @Override
-    public void mouseClicked(MouseEvent event) {
-        // Unused method
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // Unused method
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // Unused method
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // Unused method
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        // Unused method
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        // Unused method
     }
 }
