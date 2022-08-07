@@ -77,7 +77,7 @@ public class GamePanel extends JPanel implements MouseInputListener {
                         case PERSONAL_BEST -> message = "This is your current personal best! Keep up!";
                         case REGULAR       -> message = "Congratulations, you won!";
                     }
-                    JOptionPane.showMessageDialog(null, message);
+                    JOptionPane.showMessageDialog(null, message + " Your score: " + score);
                 }
             }
         } else if (SwingUtilities.isRightMouseButton(event) && button.isInteractive()) {
