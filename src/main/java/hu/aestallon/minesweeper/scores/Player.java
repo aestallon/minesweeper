@@ -1,12 +1,10 @@
 package hu.aestallon.minesweeper.scores;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Player {
 
     private final String name;
-    private final List<Integer> scores;
     private final DatabaseHandler databaseHandler;
 
     private int personalBest;
@@ -15,12 +13,9 @@ public class Player {
         this.name = Objects.requireNonNull(name);
         this.databaseHandler = Objects.requireNonNull(databaseHandler);
 
-        scores = databaseHandler.getPlayerScoresOrdered(name);
-        if (scores.isEmpty()) {
-            personalBest = 0;
-        } else {
-            personalBest = scores.get(scores.size() - 1);
-        }
+        personalBest = databaseHandler.getPlayerScoresOrdered(name).stream()
+                .mapToInt(Integer::intValue)
+                .max().orElse(0);
     }
 
     public String getName() {
@@ -42,7 +37,6 @@ public class Player {
         } else {
             category = ScoreCategory.REGULAR;
         }
-        scores.add(score);
         databaseHandler.insertScore(this.name, score);
         return category;
     }

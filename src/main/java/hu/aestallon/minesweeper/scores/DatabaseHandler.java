@@ -3,6 +3,7 @@ package hu.aestallon.minesweeper.scores;
 import hu.aestallon.minesweeper.Main;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,9 @@ public class DatabaseHandler {
         return dbHandler;
     }
 
-    @SuppressWarnings("unused")
-    public static DatabaseHandler getCustomInstance(String dbHeader, String dbDirectory, String dbName) {
+    // this method is intentionally static to be called by test initialisation,
+    // which is far from ideal, but gets the job done.
+    static DatabaseHandler getCustomInstance(String dbHeader, String dbDirectory, String dbName) {
         return new DatabaseHandler(dbHeader, dbDirectory, dbName);
     }
 
@@ -52,9 +54,10 @@ public class DatabaseHandler {
     }
 
     /**
+     * Establishes connection to the database.
      *
-     * @return
-     * @throws SQLException
+     * @return a {@code Connection} instance representing the connection to the database
+     * @throws SQLException if a database access error occurs
      */
     private Connection connect() throws SQLException {
         return DriverManager.getConnection(dbUrl);
@@ -76,6 +79,7 @@ public class DatabaseHandler {
         }
     }
 
+    @SuppressWarnings("unused")
     public void clear() {
         final String sql = "DELETE FROM scores;";
         try (Connection conn = connect()) {

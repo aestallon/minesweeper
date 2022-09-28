@@ -45,10 +45,10 @@ To compile and run the project you need Java 17 (or newer) installed on your com
 1. Clone or download the project.
 2. Navigate to the project's directory.
 3. You can compile the project using Maven:
-    - If you have Maven installed, you can execute `mvn clean compile assembly:single`.
-    - Alternatively, you can use the provided Maven wrapper and execute `./mvnw clean compile assembly:single` instead.
+    - If you have Maven installed, you can execute `mvn clean install`.
+    - Alternatively, you can use the provided Maven wrapper and execute `./mvnw clean install` instead.
 4. After successful compilation, navigate to the `target` subdirectory, where you can find the executable JAR file.
-5. While in the JAR's directory, launch the application by executing `java -jar minesweeper<versioning>.jar`!
+5. While in the JAR's directory, launch the application by executing `java -jar Minesweeper.jar`!
 6. Enjoy!
 
 
