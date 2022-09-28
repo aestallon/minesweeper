@@ -3,6 +3,7 @@ package hu.aestallon.minesweeper.scores;
 import hu.aestallon.minesweeper.Main;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,9 @@ public class DatabaseHandler {
         return dbHandler;
     }
 
-    @SuppressWarnings("unused")
-    public static DatabaseHandler getCustomInstance(String dbHeader, String dbDirectory, String dbName) {
+    // this method is intentionally static to be called by test initialisation,
+    // which is far from ideal, but gets the job done.
+    static DatabaseHandler getCustomInstance(String dbHeader, String dbDirectory, String dbName) {
         return new DatabaseHandler(dbHeader, dbDirectory, dbName);
     }
 
